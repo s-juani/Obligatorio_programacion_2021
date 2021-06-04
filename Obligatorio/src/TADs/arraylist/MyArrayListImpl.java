@@ -40,4 +40,16 @@ public class MyArrayListImpl<K> implements MyArrayList<K> {
     public int size(){
         return size;
     }
+
+    @Override
+    public void setElement(int position, K value){
+        if (position >= 0 && position < list.length){
+            list[position] = value;
+        }
+    }
+
+    @Override
+    public int getLenght(){
+        return list.length;
+    }
 }

@@ -1,6 +1,9 @@
 package filereader;
 
+import TADs.arraylist.MyArrayList;
+import TADs.arraylist.MyArrayListImpl;
 import TADs.hash.*;
+import java.util.Date;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -22,11 +25,13 @@ import java.io.IOException;
 
 public abstract class fileReader {
 
-    public static MyHash readCast(){
+    public static MyHash readCastMember(){
+
+        System.out.println("funca");
 
         BufferedReader reader = null;
         String line;
-        String[] row = new String[17];
+        MyArrayList row = new MyArrayListImpl(17);
         int column;
         final String castPath = "dataset\\IMDb names.csv";
 
@@ -42,21 +47,57 @@ public abstract class fileReader {
                 for (current = 0; current < line.length(); current++){
                     if (line.charAt(current) == '\"') inQuotes = !inQuotes;
                     else if (line.charAt(current) == ',' && !inQuotes){
-                        row[column] = line.substring(start,current);
+                        row.setElement(column, line.substring(start,current));    //FIXME
                         column++;
                         start = current+1;
                     }
                 }
 
-                if (column == row.length-1){
-                    row[column] = line.substring(start, current);
-                    for (int i = 0; i < row.length; i++){
-                        System.out.printf("%-40s","---"+row[i]);
+                // ACA ESTA EL OUTPUT
+                // START
+                if (column == row.getLenght()-1){
+                    row.setElement(column, line.substring(start, current));
+
+
+                    /**
+                     * row[0] = imdb_name_id            String
+                     * row[1] = name                    String
+                     * row[2] = birth_name              String
+                     * row[3] = height                  int
+                     * row[4] = bio                     String
+                     * row[5] = birth_details        -- IGNORAR ------
+                     * row[6] = date_of_birth           Date
+                     * row[7] = place_of_birth          String[birthState, birthCountry, birthCity]
+                     * row[8] = death_details        -- IGNORAR ------
+                     * row[9] = date_of_death           Date
+                     * row[10] = place_of_death         String[deathState, deathCountry, deathCity]
+                     * row[11] = reason_of_death        CauseOfDeath (name String)
+                     * row[12] = spouses_string         String
+                     * row[13] = spouses                int
+                     * row[14] = divorces               int
+                     * row[15] = spouses_with_children  int
+                     * row[16] = children               int
+                     */
+
+                    // Checkear si ya se registro un cause_of_death
+                    // igual a este.
+                    // FIXME
+
+
+
+
+
+                    for (int i = 0; i < row.getLenght(); i++){
+                        System.out.printf("%-40s","---"+row.get(i));
                     }
                     System.out.println();
                     column = 0;
                     inQuotes = false;
                 }
+                // FINISH
+
+
+
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -9,4 +9,7 @@ public interface MyArrayList<K> {
 
     public int size();
 
+    public void setElement(int position, K Value);
+
+    public int getLenght();
 }

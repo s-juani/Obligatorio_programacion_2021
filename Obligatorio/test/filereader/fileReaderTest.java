@@ -6,6 +6,6 @@ public class fileReaderTest {
 
     @Test
     public void testFlujoNormal(){
-        fileReader.readCast();
+        fileReader.readCastMember();
     }
 }
