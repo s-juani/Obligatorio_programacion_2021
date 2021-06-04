@@ -1,5 +1,6 @@
 package TADs.arraylist;
 
+
 public class MyArrayListImpl<K> implements MyArrayList<K> {
     private K[] list;
     private int size = 0;

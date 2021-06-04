@@ -16,7 +16,7 @@ public class CastMember {
     private String deathState;
     private String deathCountry;
     private String deathCity;
-    private CauseOfDeath deathDetails;  // new
+    //private CauseOfDeath deathDetails;  // FIXME falta crear constructor en CauseOfDeath
     private String spousesString;
     private int spouses;
     private int divorces;

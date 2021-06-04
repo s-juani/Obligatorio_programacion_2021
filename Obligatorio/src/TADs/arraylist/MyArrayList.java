@@ -1,11 +1,12 @@
 package TADs.arraylist;
 
 public interface MyArrayList<K> {
-    void add(K value);
+    public void add(K value);
 
-    void delete(K value);
+    public void delete(K value);
 
-    K get(int position);
+    public K get(int position);
 
-    int size();
+    public int size();
+
 }
