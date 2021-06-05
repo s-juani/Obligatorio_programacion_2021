@@ -3,6 +3,8 @@ package filereader;
 import TADs.arraylist.MyArrayList;
 import TADs.arraylist.MyArrayListImpl;
 import TADs.hash.*;
+import entities.*;
+
 import java.util.Date;
 
 import java.io.BufferedReader;
@@ -115,4 +117,9 @@ public abstract class fileReader {
 
         return null;
     }
+
+    public static void readCastMembers(MyHash<Integer, CastMember> castMemberHash, MyHash<Integer, CauseOfDeath> causeOfDeathHash){
+
+    }
+
 }
