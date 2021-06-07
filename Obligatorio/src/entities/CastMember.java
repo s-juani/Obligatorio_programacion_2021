@@ -23,11 +23,7 @@ public class CastMember {
     private final int spousesWithChildren;
     private final int children;
 
-    public CastMember(String imdbNameId, String name, String birthName, int height,
-                      String bio, Date birthDate, String birthState, String birthCountry,
-                      String birthCity, Date deathDate, String deathState, String deathCountry,
-                      String deathCity, CauseOfDeath[] reasonOfDeath, String spousesString,
-                      int spouses, int divorces, int spousesWithChildren, int children) {
+    public CastMember(String imdbNameId, String name, String birthName, int height, String bio, Date birthDate, String birthState, String birthCountry, String birthCity, Date deathDate, String deathState, String deathCountry, String deathCity, CauseOfDeath[] reasonOfDeath, String spousesString, int spouses, int divorces, int spousesWithChildren, int children) {
         this.imdbNameId = imdbNameId;       //0
         this.name = name;                   //1
         this.birthName = birthName;         //2
@@ -48,6 +44,7 @@ public class CastMember {
         this.spousesWithChildren = spousesWithChildren; //15
         this.children = children;           //16
     }
+
 
     public String getImdbNameId() {
         return imdbNameId;
@@ -121,6 +118,27 @@ public class CastMember {
     public int hashCode(){
         return Integer.parseInt(imdbNameId.substring(2));
     }
+
+
+    /*
+     * row[0] = imdb_name_id            String
+     * row[1] = name                    String
+     * row[2] = birth_name              String
+     * row[3] = height                  int
+     * row[4] = bio                     String
+     * row[5] = birth_details        -- IGNORAR ------
+     * row[6] = date_of_birth           Date
+     * row[7] = place_of_birth          String[birthState, birthCountry, birthCity]
+     * row[8] = death_details        -- IGNORAR ------
+     * row[9] = date_of_death           Date
+     * row[10] = place_of_death         String[deathState, deathCountry, deathCity]
+     * row[11] = reason_of_death        CauseOfDeath (name String)
+     * row[12] = spouses_string         String
+     * row[13] = spouses                int
+     * row[14] = divorces               int
+     * row[15] = spouses_with_children  int
+     * row[16] = children               int
+     */
 
 
 }

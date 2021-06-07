@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.zip.DataFormatException;
 
 /**
  * Esto es total y completamente en modalidad de prueba, esta clase no es definitiva y
@@ -118,8 +119,84 @@ public abstract class fileReader {
         return null;
     }
 
-    /*public static void readCastMembers(MyHash<Integer, CastMember> castMemberHash, MyHash<Integer, CauseOfDeath> causeOfDeathHash){
+    public static void readCastMember(MyHash<Integer, CastMember> castMemberHash, MyHash<Integer, CauseOfDeath> causeOfDeathHash){
+        BufferedReader reader = null;
+        String line;
+        String[] row = new String[17];
+        int column;
+        final String castPath = "dataset\\IMDb names.csv";
 
-    }*/
+        try{
+            reader = new BufferedReader(new FileReader(castPath));
+            line = reader.readLine();
+            column = 0;
+            int current;
+            int start;
+            boolean inQuotes = false;
+
+            while ((line = reader.readLine()) != null){
+                start = 0;
+                for (current = 0; current < line.length(); current++){
+                    if (line.charAt(current) == '\"') inQuotes = !inQuotes;
+                    else if (line.charAt(current) == ',' && !inQuotes){
+                        row[column] = line.substring(start,current);    //FIXME
+                        column++;
+                        start = current+1;
+                    }
+                }
+
+                // ACA ESTA EL OUTPUT
+                // START
+                if (column == row.length-1){
+                    row[column] = line.substring(start, current);
+
+                    int height=0;
+                    if (!row[3].equals("")) height = Integer.parseInt(row[3]);
+                    //Date birthDate = null;
+                    //if (!row[3].equals("")) height = Integer.parseInt(row[3]);
+                    CastMember newCastMember = new CastMember(
+                            row[0],
+                            row[1],
+                            row[2],
+                            height,
+                            row[4],
+                            null,
+                            row[7],
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            0,
+                            0,
+                            0,
+                            0);
+                    castMemberHash.put(newCastMember.hashCode(),newCastMember);
+                    column = 0;
+                    inQuotes = false;
+                }
+                // FINISH
+
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try{
+                assert reader != null;
+                reader.close();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
+
 
 }
