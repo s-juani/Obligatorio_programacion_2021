@@ -23,8 +23,12 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
         if (array.length>count) {
             array[count]=element;
             switch (tipo) {
-                case "max" -> addReorderMax(count);
-                case "min" -> addReorderMin(count);
+                case "max":
+                    addReorderMax(count);
+                    break;
+                case "min":
+                    addReorderMin(count);
+                    break;
             }
             count++;
         }
@@ -35,8 +39,12 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
             T element = array[0];
             array[0]=array[count-1];
             switch (tipo) {
-                case "max" -> removeReorderMax(0);
-                case "min" -> removeReorderMin(0);
+                case "max":
+                    removeReorderMax(0);
+                    break;
+                case "min":
+                    removeReorderMin(0);
+                    break;
             }
             count--;
             return element;
