@@ -129,6 +129,7 @@ public abstract class fileReader {
         try{
             reader = new BufferedReader(new FileReader(castPath));
             line = reader.readLine();
+            line = reader.readLine();
             column = 0;
             int current;
             int start;
@@ -150,34 +151,67 @@ public abstract class fileReader {
                 if (column == row.length-1){
                     row[column] = line.substring(start, current);
 
+                    // int casts
                     int height=0;
                     if (!row[3].equals("")) height = Integer.parseInt(row[3]);
+                    int spouses=0;
+                    if (!row[13].equals("")) spouses = Integer.parseInt(row[13]);
+                    int divorces=0;
+                    if (!row[14].equals("")) divorces = Integer.parseInt(row[14]);
+                    int spousesWithChildren=0;
+                    if (!row[15].equals("")) spousesWithChildren = Integer.parseInt(row[15]);
+                    int children=0;
+                    if (!row[16].equals("")) children = Integer.parseInt(row[16]);
+
+                    //array casts
+                    row[7] = row[7].substring(1,row[7].length()-1);
+                    String[] birth = row[7].split(",");
+                    row[10] = row[10].substring(1,row[10].length()-1);
+                    String[] death = row[10].split(",");
+
+                    //new CauseOfDeath
+                    String[] causes = row[11].split(",");
+                    CauseOfDeath[] causesOfDeath = new CauseOfDeath[causes.length];
+                    for (int i=0; i<causes.length; i++) {
+                        CauseOfDeath causeOfDeath = new CauseOfDeath(causes[i]);
+                        if (!causeOfDeathHash.contains(causeOfDeath.hashCode())){
+                            causeOfDeathHash.put(causeOfDeath.hashCode(),causeOfDeath);
+                        } else {
+                            causeOfDeath = causeOfDeathHash.get(causeOfDeath.hashCode());
+                        }
+                        causesOfDeath[i] = causeOfDeath;
+                    }
+
+                    // Date casts
                     //Date birthDate = null;
-                    //if (!row[3].equals("")) height = Integer.parseInt(row[3]);
+                    //if (!row[9].equals("")) birthDate = (Date) Date.parse(row[9]);
+
                     CastMember newCastMember = new CastMember(
                             row[0],
                             row[1],
                             row[2],
                             height,
                             row[4],
-                            null,
-                            row[7],
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            0,
-                            0,
-                            0,
-                            0);
+                            null, // row[6] buscar como castear a Date
+                            birth[0], //row[7] array con birth state, country, city
+                            birth[1],
+                            birth[2],
+                            null, // row[9] buscar como castear a Date
+                            death[0], //row[10] array con death state, country, city
+                            death[1],
+                            death[2],
+                            causesOfDeath, //row[11] new CauseOfDeath (name String)
+                            row[12],
+                            spouses,
+                            divorces,
+                            spousesWithChildren,
+                            children);
                     castMemberHash.put(newCastMember.hashCode(),newCastMember);
+
                     column = 0;
                     inQuotes = false;
                 }
+
                 // FINISH
 
 

@@ -19,7 +19,7 @@ public class fileReaderTest {
         MyHash<Integer, CauseOfDeath> causeOfDeathHash = new MyClosedHashImpl<>();
         fileReader.readCastMember(castMemberHash,causeOfDeathHash);
         System.out.println(castMemberHash.get(1).getImdbNameId());
-        System.out.println(castMemberHash.get(1).getHeight());
+        System.out.println(castMemberHash.get(1).getChildren());
 
     }
 }
