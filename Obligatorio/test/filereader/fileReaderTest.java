@@ -17,7 +17,7 @@ public class fileReaderTest {
     public void testCastMember(){
         MyHash<Integer, CastMember> castMemberHash = new MyClosedHashImpl<>();
         MyHash<Integer, CauseOfDeath> causeOfDeathHash = new MyClosedHashImpl<>();
-        fileReader.readCastMember(castMemberHash,causeOfDeathHash);
+        fileReader.readCastMember();
         System.out.println(castMemberHash.get(1).getImdbNameId());
         System.out.println(castMemberHash.get(1).getChildren());
 

@@ -6,6 +6,7 @@ import TADs.hash.*;
 import entities.*;
 
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -28,7 +29,7 @@ import java.util.zip.DataFormatException;
 
 public abstract class fileReader {
 
-    public static MyHash readCastMember(){
+    public static MyHash readCastMemberViejo(){
 
         System.out.println("funca");
 
@@ -119,7 +120,9 @@ public abstract class fileReader {
         return null;
     }
 
-    public static void readCastMember(MyHash<Integer, CastMember> castMemberHash, MyHash<Integer, CauseOfDeath> causeOfDeathHash){
+
+
+    public static void readCastMember(){
         BufferedReader reader = null;
         String line;
         String[] row = new String[17];
@@ -128,7 +131,6 @@ public abstract class fileReader {
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
-            line = reader.readLine();
             line = reader.readLine();
             column = 0;
             int current;
@@ -151,23 +153,120 @@ public abstract class fileReader {
                 if (column == row.length-1){
                     row[column] = line.substring(start, current);
 
+
+                    //--------------------
                     // int casts
-                    int height=0;
+                    Integer height = null;
                     if (!row[3].equals("")) height = Integer.parseInt(row[3]);
-                    int spouses=0;
+                    Integer spouses = null;
                     if (!row[13].equals("")) spouses = Integer.parseInt(row[13]);
-                    int divorces=0;
+                    Integer divorces = null;
                     if (!row[14].equals("")) divorces = Integer.parseInt(row[14]);
-                    int spousesWithChildren=0;
+                    Integer spousesWithChildren = null;
                     if (!row[15].equals("")) spousesWithChildren = Integer.parseInt(row[15]);
-                    int children=0;
+                    Integer children = null;
                     if (!row[16].equals("")) children = Integer.parseInt(row[16]);
 
                     //array casts
-                    row[7] = row[7].substring(1,row[7].length()-1);
-                    String[] birth = row[7].split(",");
-                    row[10] = row[10].substring(1,row[10].length()-1);
-                    String[] death = row[10].split(",");
+                    String[] birth = new String[3];
+                    if (!row[7].equals("")){
+                        row[7] = row[7].substring(1,row[7].length()-1);
+                        birth = row[7].split(",");
+                    }
+                    String[] death = new String[3];
+                    if (!row[10].equals("")){
+                        row[10] = row[10].substring(1,row[10].length()-1);
+                        death = row[10].split(",");
+                    }
+
+                    //cause of death -> to list
+                    String[] causesOfDeath = row[11].split(",");    //FIXME agregar separacion por and segun conteste Jimena
+
+                    //birthDate -> adapt to java.date
+                    Date birthDate = null;
+                    if (!row[6].equals("")){
+                        try{
+                            birthDate = new SimpleDateFormat("yyyy-mm-dd").parse(row[6]);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //birthDate -> adapt to java.date
+                    Date deathDate = null;
+                    if (!row[9].equals("")){
+
+                        if (row[9].length() == 10){
+                            try{
+                                deathDate = new SimpleDateFormat("dd/mm/yyyy").parse(row[9]);
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                        else if (row[9].length() == 4){
+                            try{
+                                deathDate = new SimpleDateFormat("yyyy").parse(row[9]);
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                        else{
+                            //FIXME completar el resto de los casos posibles por inconsistencias
+                        }
+                    }
+
+
+
+
+
+                    CastMember memberToAdd = new CastMember(row[0], row[1], row[2], height, row[4],
+                                                            birthDate,      // row[6] buscar como castear a Date
+                                                            birth[0],       //row[7] array con birth state, country, city
+                                                            birth[1],
+                                                            birth[2],
+                                                            deathDate,      //row[9] buscar como castear a Date
+                                                            death[0],       //row[10] array con death state, country, city
+                                                            death[1],
+                                                            death[2],
+                                                            causesOfDeath,
+                                                            row[12],
+                                                            spouses,
+                                                            divorces,
+                                                            spousesWithChildren,
+                                                            children);
+
+                    /**
+                     *                             row[0],
+                     *                             row[1],
+                     *                             row[2],
+                     *                             height,
+                     *                             row[4],
+                     *                             null, // row[6] buscar como castear a Date
+                     *                             birth[0], //row[7] array con birth state, country, city
+                     *                             birth[1],
+                     *                             birth[2],
+                     *                             null, // row[9] buscar como castear a Date
+                     *                             death[0], //row[10] array con death state, country, city
+                     *                             death[1],
+                     *                             death[2],
+                     *                             causesOfDeath, //row[11] new CauseOfDeath (name String)
+                     *                             row[12],
+                     *                             spouses,
+                     *                             divorces,
+                     *                             spousesWithChildren,
+                     *                             children);
+                     */
+
+
+                    for (int i = 0; i < row.length; i++){
+                        System.out.printf("%-40s","---"+row[i]);
+                    }
+
+
+
+
+                    /*
+
 
                     //new CauseOfDeath
                     String[] causes = row[11].split(",");
@@ -207,7 +306,9 @@ public abstract class fileReader {
                             spousesWithChildren,
                             children);
                     castMemberHash.put(newCastMember.hashCode(),newCastMember);
+                    */
 
+                    //------------
                     column = 0;
                     inQuotes = false;
                 }
@@ -229,8 +330,4 @@ public abstract class fileReader {
         }
 
     }
-
-
-
-
 }

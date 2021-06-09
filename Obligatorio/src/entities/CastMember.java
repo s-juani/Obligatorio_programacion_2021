@@ -1,8 +1,15 @@
 package entities;
 
+import TADs.hash.MyClosedHashImpl;
+import TADs.hash.MyHash;
+
 import java.util.Date;
 
 public class CastMember {
+
+    private static MyHash<Integer,CauseOfDeath> causeOfDeathList = new MyClosedHashImpl<>(30,0.8);
+
+
     private final String imdbNameId;
     private final String name;
     private final String birthName;
@@ -23,7 +30,7 @@ public class CastMember {
     private final int spousesWithChildren;
     private final int children;
 
-    public CastMember(String imdbNameId, String name, String birthName, int height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, CauseOfDeath[] reasonOfDeath, String spousesString, int spouses, int divorces, int spousesWithChildren, int children) {
+    public CastMember(String imdbNameId, String name, String birthName, int height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String[] reasonOfDeath, String spousesString, int spouses, int divorces, int spousesWithChildren, int children) {
         this.imdbNameId = imdbNameId;       //0
         this.name = name;                   //1
         this.birthName = birthName;         //2
@@ -37,7 +44,7 @@ public class CastMember {
         this.deathCity = deathCity;         //10
         this.deathState = deathState;       //10
         this.deathCountry = deathCountry;   //10
-        this.reasonOfDeath = reasonOfDeath; //11
+        this.reasonOfDeath = addReasonOfDeath(reasonOfDeath); //11
         this.spousesString = spousesString; //12
         this.spouses = spouses;             //13
         this.divorces = divorces;           //14
@@ -117,6 +124,39 @@ public class CastMember {
 
     public int hashCode(){
         return Integer.parseInt(imdbNameId.substring(2));
+    }
+
+    private CauseOfDeath[] addReasonOfDeath(String[] reasons){
+        CauseOfDeath temp;
+        CauseOfDeath[] causes = new CauseOfDeath[reasons.length];
+        int i = 0;
+        for (String reason : reasons) {
+            temp = new CauseOfDeath(reason);
+            CauseOfDeath exists = causeOfDeathList.get(temp.hashCode());
+            if (exists == null){
+                causeOfDeathList.put(temp.hashCode(),temp);
+            } else {
+                 temp = exists;
+            }
+            causes[i] = temp;
+            i++;
+        }
+
+
+
+        /*String[] reasons = row[11].split(",");
+
+                    CauseOfDeath[] causesOfDeath = new CauseOfDeath[reasons.length];
+                    for (int i=0; i<causes.length; i++) {
+                        CauseOfDeath causeOfDeath = new CauseOfDeath(causes[i]);
+                        if (!causeOfDeathHash.contains(causeOfDeath.hashCode())){
+                            causeOfDeathHash.put(causeOfDeath.hashCode(),causeOfDeath);
+                        } else {
+                            causeOfDeath = causeOfDeathHash.get(causeOfDeath.hashCode());
+                        }
+                        causesOfDeath[i] = causeOfDeath;
+                    }*/
+        return causes;
     }
 
 
