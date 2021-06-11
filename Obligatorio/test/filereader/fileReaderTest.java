@@ -21,6 +21,6 @@ public class fileReaderTest {
         fileReader.readCastMember();
         System.out.println(castMemberHash.get(1).getImdbNameId());
         System.out.println(castMemberHash.get(1).getChildren());
-
+        assertTrue(true);
     }
 }

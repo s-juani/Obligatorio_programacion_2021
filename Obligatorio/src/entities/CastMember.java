@@ -13,7 +13,7 @@ public class CastMember {
     private final String imdbNameId;
     private final String name;
     private final String birthName;
-    private final int height;
+    private final Integer height;
     private final String bio;
     private final Date birthDate;
     private final String birthCity;
@@ -25,12 +25,12 @@ public class CastMember {
     private final String deathCountry;
     private final CauseOfDeath[] reasonOfDeath;  // FIXME implementar un checkeo de si ya se registro dicha reasonOfDeath
     private final String spousesString;
-    private final int spouses;
-    private final int divorces;
-    private final int spousesWithChildren;
-    private final int children;
+    private final Integer spouses;
+    private final Integer divorces;
+    private final Integer spousesWithChildren;
+    private final Integer children;
 
-    public CastMember(String imdbNameId, String name, String birthName, int height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String[] reasonOfDeath, String spousesString, int spouses, int divorces, int spousesWithChildren, int children) {
+    public CastMember(String imdbNameId, String name, String birthName, Integer height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String[] reasonOfDeath, String spousesString, Integer spouses, Integer divorces, Integer spousesWithChildren, Integer children) {
         this.imdbNameId = imdbNameId;       //0
         this.name = name;                   //1
         this.birthName = birthName;         //2
@@ -62,7 +62,7 @@ public class CastMember {
     public String getBirthName() {
         return birthName;
     }
-    public int getHeight() {
+    public Integer getHeight() {
         return height;
     }
     public String getBio() {
