@@ -98,16 +98,16 @@ public class CastMember {
     public String getSpousesString() {
         return spousesString;
     }
-    public int getSpouses() {
+    public Integer getSpouses() {
         return spouses;
     }
-    public int getDivorces() {
+    public Integer getDivorces() {
         return divorces;
     }
-    public int getSpousesWithChildren() {
+    public Integer getSpousesWithChildren() {
         return spousesWithChildren;
     }
-    public int getChildren() {
+    public Integer getChildren() {
         return children;
     }
 

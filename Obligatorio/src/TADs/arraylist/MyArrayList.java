@@ -12,4 +12,6 @@ public interface MyArrayList<K> {
     public void setElement(int position, K Value);
 
     public int getLenght();
+
+    public void print();
 }

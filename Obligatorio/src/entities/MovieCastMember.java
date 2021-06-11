@@ -1,7 +1,7 @@
 package entities;
 
 public class MovieCastMember {
-    private int ordering;
+    private Integer ordering;
     private String category;
     private String job;
     //private List<String> characters;

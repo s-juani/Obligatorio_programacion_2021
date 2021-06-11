@@ -1,9 +1,9 @@
 package entities;
 
 public class MovieRating {
-    private float weightedAverage;
-    private int totalVotes;
-    private float meanVote;
-    private float medianVote;
+    private Float weightedAverage;
+    private Integer totalVotes;
+    private Float meanVote;
+    private Float medianVote;
     //private List<int> votesRating;
 }

@@ -10,23 +10,23 @@ public class Movie {
    private String imdbTitleId;
    private String title;
    private String originalTitle;
-   private int Year;
+   private Integer Year;
    private Date datePublished;
    private MyArrayList<String> genre = new MyArrayListImpl<>(5);
-   private int duration;
+   private Integer duration;
    private MyArrayList<String> country = new MyArrayListImpl<>(5);
    private String language;
    private MyArrayList<String> writer = new MyArrayListImpl<>(5);
    private String productionCompany;
    private MyArrayList<String> actors = new MyArrayListImpl<>(5);
    private String description;
-   private float avgVote;
-   private int votes;
+   private Float avgVote;
+   private Integer votes;
    private String budget;
    private String usaGrossIncome;
-   private float metaScore;
-   private float reviewsFromUsers;
-   private float reviewsFromCritics;
+   private Float metaScore;
+   private Float reviewsFromUsers;
+   private Float reviewsFromCritics;
 
 
 }

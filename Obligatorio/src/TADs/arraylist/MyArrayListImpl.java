@@ -52,4 +52,11 @@ public class MyArrayListImpl<K> implements MyArrayList<K> {
     public int getLenght(){
         return list.length;
     }
+
+    @Override
+    public void print(){
+        for (int i=0; i<size;i++){
+            System.out.println(list[i]);
+        }
+    }
 }
