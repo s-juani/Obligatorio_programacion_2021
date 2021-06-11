@@ -28,12 +28,14 @@ import java.io.IOException;
 public abstract class fileReader {
 
 
-    public static void readCastMember(){
+    public static MyHash readCastMember(){
         BufferedReader reader = null;
         String line;
         String[] row = new String[17];
         int column;
-        final String castPath = "dataset\\IMDb names.csv";
+        final String castPath = "dataset\\IMDb names2.csv";
+
+        MyHash hashToReturn = new MyClosedHashImpl(496187, 0.75);
 
 
         try{
@@ -109,24 +111,22 @@ public abstract class fileReader {
                     //cause of death -> to list
                     String[] causesOfDeath = row[11].split(",");   //FIXME agregar separacion por and segun conteste Jimena
 
-
-
                     //birthDate -> adapt to java.date
                     Date birthDate = null;  // row[6]
                     if (!row[6].equals("")){
                         try{
                             birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(row[6]);
-                        } catch (ParseException e){
-                            String year = null;
+                        } catch (Exception e){
+                            String year = "";
                             for (int i=0; i<row[6].length(); i++){
                                 if (Character.isDigit(row[6].charAt(i))){
                                     year += row[6].charAt(i);
                                 }
                             }
                             try{
-                                birthDate = new SimpleDateFormat("yyyy").parse(row[6]);
-                            } catch (ParseException f){
-                                e.printStackTrace();
+                                birthDate = new SimpleDateFormat("yyyy").parse(year);
+                            } catch (Exception f){
+                                f.printStackTrace();
                             }
                         }
                     }
@@ -179,11 +179,14 @@ public abstract class fileReader {
                      *                             children);
                      */
 
-                    for (int i = 0; i < row.length; i++){
-                        System.out.printf("%-40s","---"+row[i]);
-                    }
-                    System.out.println(" ");
+                    //for (int i = 0; i < row.length; i++){
+                    //    System.out.printf("%-40s","---"+row[i]);
+                    //}
+                    //System.out.println(" ");
                     //------------
+
+                    hashToReturn.put(row[0],memberToAdd);
+
                     column = 0;
                     inQuotes = false;
                 }
@@ -199,5 +202,6 @@ public abstract class fileReader {
                 e.printStackTrace();
             }
         }
+        return hashToReturn;
     }
 }

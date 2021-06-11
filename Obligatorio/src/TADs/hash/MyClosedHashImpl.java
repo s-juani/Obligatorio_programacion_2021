@@ -130,7 +130,7 @@ public class MyClosedHashImpl<K,V> implements MyHash<K,V> {
         if (temp >= hashTable.length) {
             temp -= hashTable.length;
         }
-
+        if (temp < 0) temp *= -1;
         return temp;
     }
 
