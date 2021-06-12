@@ -35,7 +35,7 @@ public abstract class fileReader {
         int column;
         final String castPath = "dataset\\IMDb names2.csv";
 
-        MyHash hashToReturn = new MyClosedHashImpl(496187, 0.75);
+        MyHash<Integer,CastMember> hashToReturn = new MyClosedHashImpl<>(496187, 0.75);
 
 
         try{
@@ -109,7 +109,16 @@ public abstract class fileReader {
                     }
 
                     //cause of death -> to list
-                    String[] causesOfDeath = row[11].split(",");   //FIXME agregar separacion por and segun conteste Jimena
+                    MyArrayList<String> causes = new MyArrayListImpl<>(5);
+                    for (String t : row[11].split(",")) {
+                        for (String s : t.split("and")) {
+                            if (!s.equals(" ") && !s.equals("")) causes.add(s);
+                        }
+                    }
+                    String[] causesOfDeath = new String[causes.size()];
+                    for (int i=0; i<causes.size(); i++) {
+                        causesOfDeath[i]=causes.get(i);
+                    }
 
                     //birthDate -> adapt to java.date
                     Date birthDate = null;  // row[6]
@@ -185,7 +194,7 @@ public abstract class fileReader {
                     //System.out.println(" ");
                     //------------
 
-                    hashToReturn.put(row[0],memberToAdd);
+                    hashToReturn.put(memberToAdd.hashCode(),memberToAdd);
 
                     column = 0;
                     inQuotes = false;

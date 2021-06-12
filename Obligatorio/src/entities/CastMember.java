@@ -44,7 +44,7 @@ public class CastMember {
         this.deathCity = deathCity;         //10
         this.deathState = deathState;       //10
         this.deathCountry = deathCountry;   //10
-        this.reasonOfDeath = null;//addReasonOfDeath(reasonOfDeath); //11
+        this.reasonOfDeath = addReasonOfDeath(reasonOfDeath); //11
         this.spousesString = spousesString; //12
         this.spouses = spouses;             //13
         this.divorces = divorces;           //14
