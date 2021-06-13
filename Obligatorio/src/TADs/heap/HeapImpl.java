@@ -3,25 +3,25 @@ package TADs.heap;
 import TADs.heap.exceptions.EmptyHeapException;
 import TADs.heap.exceptions.HeapOverflowException;
 
-public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
-    private T[] array;
+public class HeapImpl<T extends Comparable<T>,V> implements Heap<T,V> {
+    private HeapNode<T,V>[] array;
     private int count;
     private String tipo;    //max o min
 
     public HeapImpl(int size, String tipo) {
-        array = (T[]) new Comparable[size];
+        array = (HeapNode<T,V>[]) new Object[size];
         count = 0;
         this.tipo = tipo;
     }
     public HeapImpl(String tipo) {
-        array = (T[]) new Comparable[15];
+        array = (HeapNode<T,V>[]) new Object[15];
         count=0;
         this.tipo=tipo;
     }
 
-    public void add(T element) throws HeapOverflowException {
+    public void add(T key, V value) throws HeapOverflowException {
         if (array.length>count) {
-            array[count]=element;
+            array[count] = new HeapNode<>(key, value);
             switch (tipo) {
                 case "max":
                     addReorderMax(count);
@@ -34,10 +34,10 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
         }
         else throw new HeapOverflowException();
     }
-    public T remove() throws EmptyHeapException, HeapOverflowException {
+    public Object[] remove() throws EmptyHeapException, HeapOverflowException {
         if (count!=0) {
-            T element = array[0];
-            array[0]=array[count-1];
+            HeapNode<T,V> elementToRemove = array[0];
+            array[0] = array[count-1];
             switch (tipo) {
                 case "max":
                     removeReorderMax(0);
@@ -47,7 +47,7 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
                     break;
             }
             count--;
-            return element;
+            return new Object[]{elementToRemove.getKey(),elementToRemove.getValue()};
         } else throw new EmptyHeapException();
     }
     public int size() {
@@ -85,8 +85,8 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
 
     private void addReorderMax(int position) throws HeapOverflowException {
         if (position!=0) {
-            T father = array[fatherPosition(position)];
-            if (father.compareTo(array[position]) < 0) {
+            HeapNode<T,V> father = array[fatherPosition(position)];
+            if (father.getKey().compareTo(array[position].getKey()) < 0) {
                 array[fatherPosition(position)] = array[position];
                 array[position] = father;
                 addReorderMax(fatherPosition(position));
@@ -95,8 +95,8 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
     }
     private void addReorderMin(int position) throws HeapOverflowException {
         if (position!=0) {
-            T father = array[fatherPosition(position)];
-            if (father.compareTo(array[position]) > 0) {
+            HeapNode<T,V> father = array[fatherPosition(position)];
+            if (father.getKey().compareTo(array[position].getKey()) > 0) {
                 array[fatherPosition(position)] = array[position];
                 array[position] = father;
                 addReorderMin(fatherPosition(position));
@@ -105,15 +105,15 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
     }
     private void removeReorderMax(int position) throws HeapOverflowException {
         if (leftPosition(position) < count-1) {
-            T left = array[leftPosition(position)];
-            if (left.compareTo(array[position]) > 0) {
+            HeapNode<T,V> left = array[leftPosition(position)];
+            if (left.getKey().compareTo(array[position].getKey()) > 0) {
                 array[leftPosition(position)] = array[position];
                 array[position] = left;
                 removeReorderMax(leftPosition(position));
             }
         } if (rightPosition(position) < count-1) {
-            T right = array[rightPosition(position)];
-            if (right.compareTo(array[position]) > 0) {
+            HeapNode<T,V> right = array[rightPosition(position)];
+            if (right.getKey().compareTo(array[position].getKey()) > 0) {
                 array[rightPosition(position)] = array[position];
                 array[position] = right;
                 removeReorderMax(rightPosition(position));
@@ -122,15 +122,15 @@ public class HeapImpl<T extends Comparable<T>> implements Heap<T> {
     }
     private void removeReorderMin(int position) throws HeapOverflowException {
         if (leftPosition(position) < count-1) {
-            T left = array[leftPosition(position)];
-            if (left.compareTo(array[position]) < 0) {
+            HeapNode<T,V> left = array[leftPosition(position)];
+            if (left.getKey().compareTo(array[position].getKey()) < 0) {
                 array[leftPosition(position)] = array[position];
                 array[position] = left;
                 removeReorderMin(leftPosition(position));
             }
         } if (rightPosition(position) < count-1) {
-            T right = array[rightPosition(position)];
-            if (right.compareTo(array[position]) < 0) {
+            HeapNode<T,V> right = array[rightPosition(position)];
+            if (right.getKey().compareTo(array[position].getKey()) < 0) {
                 array[rightPosition(position)] = array[position];
                 array[position] = right;
                 removeReorderMin(rightPosition(position));
