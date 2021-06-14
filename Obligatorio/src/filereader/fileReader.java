@@ -33,7 +33,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[17];
         int column;
-        final String castPath = "dataset\\IMDb names2.csv";
+        final String castPath = "dataset\\IMDb names.csv";
 
         MyHash<Integer,CastMember> hashToReturn = new MyClosedHashImpl<>(496187, 0.75);
 
@@ -358,12 +358,16 @@ public abstract class fileReader {
 
     }
 
+
+
+
+
     public static void readMovieRating(MyHash<Integer, Movie> movieHash){
         BufferedReader reader = null;
         String line;
         String[] row = new String[49];
         int column;
-        final String castPath = "dataset\\IMDb names2.csv";  /**"dataset\\IMDb ratings.csv" **/
+        final String castPath = "dataset\\IMDb names.csv";  /**"dataset\\IMDb ratings.csv" **/
 
         try{
             reader = new BufferedReader(new FileReader(castPath));

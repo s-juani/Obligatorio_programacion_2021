@@ -2,13 +2,13 @@ package entities;
 
 import TADs.hash.MyClosedHashImpl;
 import TADs.hash.MyHash;
+import TADs.hash.exceptions.invalidHashcodeMethod;
 
 import java.util.Date;
 
 public class CastMember {
 
     private static MyHash<Integer,CauseOfDeath> causeOfDeathList = new MyClosedHashImpl<>(30,0.8);
-
 
     private final String imdbNameId;
     private final String name;

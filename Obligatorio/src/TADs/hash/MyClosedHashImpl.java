@@ -13,6 +13,7 @@ public class MyClosedHashImpl<K,V> implements MyHash<K,V> {
     private static final int DEFAULT_SIZE = 10;
     private double loadFactor;
     private int maxSize;
+    private int type;   // 0 = linear; 1 = direct
 
     private ClosedHashNode[] hashTable;
     private int size;
@@ -27,6 +28,16 @@ public class MyClosedHashImpl<K,V> implements MyHash<K,V> {
         hashTable = new ClosedHashNode[tableHashSize];
         this.loadFactor = loadFactor;
         this.maxSize = (int) (tableHashSize * loadFactor);
+        this.type = 0;
+    }
+
+    public MyClosedHashImpl(int tableHashSize, double loadFactor, String hashCodeMethod){
+        hashTable = new ClosedHashNode[tableHashSize];
+        this.loadFactor = loadFactor;
+        this.maxSize = (int) (tableHashSize * loadFactor);
+        if (hashCodeMethod == "direct") this.type = 1;
+        else if (hashCodeMethod == "linear") this.type = 0;
+        else this.type = 0;
     }
 
     @Override
