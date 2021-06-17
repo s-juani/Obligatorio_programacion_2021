@@ -1,11 +1,17 @@
 package filereader;
 
+import TADs.ClosedHash.ClosedHashTable;
+import TADs.ClosedHash.HashTable;
+import TADs.ClosedHash.exceptions.*;
+import TADs.DoubleHash.DoubleHashTable;
+import TADs.DoubleHash.DoubleHashTableImpl;
 import TADs.arraylist.MyArrayList;
 import TADs.arraylist.MyArrayListImpl;
 import TADs.hash.*;
 import entities.*;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.BufferedReader;
@@ -28,14 +34,14 @@ import java.io.IOException;
 public abstract class fileReader {
 
 
-    public static MyHash<Integer, CastMember> readCastMember(){
+    public static HashTable<Integer, CastMember> readCastMember(){
         BufferedReader reader = null;
         String line;
         String[] row = new String[17];
         int column;
         final String castPath = "dataset\\IMDb names.csv";
 
-        MyHash<Integer,CastMember> hashToReturn = new MyClosedHashImpl<>(496187, 0.75);
+        HashTable<Integer,CastMember> hashToReturn = new ClosedHashTable<>(496187, 0.75f);
 
 
         try{
@@ -194,14 +200,14 @@ public abstract class fileReader {
                     //System.out.println(" ");
                     //------------
 
-                    hashToReturn.put(memberToAdd.hashCode(),memberToAdd);
+                    hashToReturn.put(memberToAdd.getImdbNameId().hashCode(),memberToAdd);
 
                     column = 0;
                     inQuotes = false;
                 }
                 // FINISH
             }
-        } catch (IOException e) {
+        } catch (IOException | KeyAlreadyExistsException e) {
             e.printStackTrace();
         } finally {
             try{
@@ -214,14 +220,14 @@ public abstract class fileReader {
         return hashToReturn;
     }
 
-    public static MyHash<Integer, Movie> readMovie(){
+    public static HashTable<Integer, Movie> readMovie(){
         BufferedReader reader = null;
         String line;
         String[] row = new String[22];
         int column;
-        final String castPath = "dataset\\IMDb names2.csv";  /**"dataset\\IMDb movies.csv" **/
+        final String castPath = "dataset\\IMDb movies.csv";
 
-        MyHash<Integer,Movie> hashToReturn = new MyClosedHashImpl<>(496187, 0.75); //ajustar tamanio
+        HashTable<Integer,Movie> hashToReturn = new ClosedHashTable<>(496187, 0.75f); //ajustar tamanio
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
@@ -337,14 +343,14 @@ public abstract class fileReader {
                     //System.out.println(" ");
                     //------------
 
-                    hashToReturn.put(movieToAdd.hashCode(),movieToAdd);
+                    hashToReturn.put(movieToAdd.getImdbTitleId().hashCode(),movieToAdd);
 
                     column = 0;
                     inQuotes = false;
                 }
                 // FINISH
             }
-        } catch (IOException e) {
+        } catch (IOException | KeyAlreadyExistsException e) {
             e.printStackTrace();
         } finally {
             try{
@@ -362,7 +368,7 @@ public abstract class fileReader {
 
 
 
-    public static void readMovieRating(MyHash<Integer, Movie> movieHash){
+    public static void readMovieRating(HashTable<Integer, Movie> movieHash){
         BufferedReader reader = null;
         String line;
         String[] row = new String[49];
@@ -464,7 +470,7 @@ public abstract class fileReader {
                 }
                 // FINISH
             }
-        } catch (IOException e) {
+        } catch (IOException | KeyNotExistsException e) {
             e.printStackTrace();
         } finally {
             try{
@@ -477,6 +483,77 @@ public abstract class fileReader {
 
 
     }
+
+    public static DoubleHashTable<Integer, Integer, MovieCastMember> readTitlePrincipals(HashTable<Integer, Movie> movieHash, HashTable<Integer, CastMember> memberHash){
+
+        BufferedReader reader = null;
+        String line;
+        String[] row = new String[6];
+        int column;
+        final String titlePrincipalsPath = "dataset\\IMDb title_principals.csv";
+
+        DoubleHashTable<Integer, Integer, MovieCastMember> hashToReturn = new DoubleHashTableImpl<>(movieHash, memberHash); //FIXME esto va a ser un doble hash
+
+        try{
+            reader = new BufferedReader(new FileReader(titlePrincipalsPath));
+            line = reader.readLine();
+            column = 0;
+            int current;
+            int start;
+            boolean inQuotes = false;
+
+            while((line = reader.readLine()) != null){
+                start = 0;
+                for (current = 0; current < line.length(); current++){
+                    if (line.charAt(current) == '\"') inQuotes = !inQuotes;
+                    else if (line.charAt(current) == ',' && !inQuotes){
+                        row[column] = line.substring(start,current);
+                        column++;
+                        start = current;
+                    }
+                }
+
+                if (column == row.length-1){
+                    row[column] = line.substring(start, current);
+
+
+
+                    // (int)ordering
+                    int ordering;
+                    if (!row[1].isEmpty()){
+                        ordering = Integer.parseInt(row[1]);
+                    }
+
+
+
+                    /**
+                     * row[0] = imdb_title_id
+                     * row[1] = ordering
+                     * row[2] = imdb_name_id
+                     * row[3] = category
+                     * row[4] = job
+                     * row[5] = characters
+                     */
+
+                    // FIXME terminar de modificar los datos para crear la entidad, adaptar donde se llama la funcion para recibir dobleHashTable
+
+                    column = 0;
+                    inQuotes = false;
+                }
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            try{
+                assert reader != null;
+                reader.close();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return hashToReturn;
+    }
+
 
 
 }

@@ -141,9 +141,6 @@ public class CastMember {
             causes[i] = temp;
             i++;
         }
-
-
-
         /*String[] reasons = row[11].split(",");
 
                     CauseOfDeath[] causesOfDeath = new CauseOfDeath[reasons.length];

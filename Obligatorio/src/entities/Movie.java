@@ -30,7 +30,7 @@ public class Movie {
    private Float metaScore;
    private Float reviewsFromUsers;
    private Float reviewsFromCritics;
-   private MovieRating rating;
+   private MovieRating rating;     //
 
    public Movie(String imdbTitleId, String title, String originalTitle, Integer year, Date datePublished, String[] genre, Integer duration, String[] country, String language, String[] director, String[] writer, String productionCompany, String[] actors, String description, Float avgVote, Integer votes, String budget, String usaGrossIncome, String worlwideGrossIncome, Float metaScore, Float reviewsFromUsers, Float reviewsFromCritics) {
       this.imdbTitleId = imdbTitleId;
