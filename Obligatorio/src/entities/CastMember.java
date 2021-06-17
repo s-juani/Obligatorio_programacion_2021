@@ -1,5 +1,9 @@
 package entities;
 
+import TADs.ClosedHash.ClosedHashTable;
+import TADs.ClosedHash.HashTable;
+import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
+import TADs.ClosedHash.exceptions.KeyNotExistsException;
 import TADs.hash.MyClosedHashImpl;
 import TADs.hash.MyHash;
 import TADs.hash.exceptions.invalidHashcodeMethod;
@@ -8,7 +12,8 @@ import java.util.Date;
 
 public class CastMember {
 
-    private static MyHash<Integer,CauseOfDeath> causeOfDeathList = new MyClosedHashImpl<>(30,0.8);
+    //private static MyHash<Integer,CauseOfDeath> causeOfDeathList = new MyClosedHashImpl<>(30,0.8);
+    private static HashTable<Integer,CauseOfDeath> causeOfDeathList = new ClosedHashTable(30,0.7f);
 
     private final String imdbNameId;
     private final String name;
@@ -30,7 +35,7 @@ public class CastMember {
     private final Integer spousesWithChildren;
     private final Integer children;
 
-    public CastMember(String imdbNameId, String name, String birthName, Integer height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String[] reasonOfDeath, String spousesString, Integer spouses, Integer divorces, Integer spousesWithChildren, Integer children) {
+    public CastMember(String imdbNameId, String name, String birthName, Integer height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String[] reasonOfDeath, String spousesString, Integer spouses, Integer divorces, Integer spousesWithChildren, Integer children) throws KeyNotExistsException, KeyAlreadyExistsException {
         this.imdbNameId = imdbNameId;       //0
         this.name = name;                   //1
         this.birthName = birthName;         //2
@@ -126,7 +131,7 @@ public class CastMember {
         return Integer.parseInt(imdbNameId.substring(2));
     }
 
-    private CauseOfDeath[] addReasonOfDeath(String[] reasons){
+    private CauseOfDeath[] addReasonOfDeath(String[] reasons) throws KeyNotExistsException, KeyAlreadyExistsException {
         CauseOfDeath temp;
         CauseOfDeath[] causes = new CauseOfDeath[reasons.length];
         int i = 0;

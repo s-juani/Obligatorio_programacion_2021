@@ -39,7 +39,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[17];
         int column;
-        final String castPath = "dataset\\IMDb names.csv";
+        final String castPath = "dataset\\IMDb names2.csv";
 
         HashTable<Integer,CastMember> hashToReturn = new ClosedHashTable<>(496187, 0.75f);
 
@@ -207,7 +207,7 @@ public abstract class fileReader {
                 }
                 // FINISH
             }
-        } catch (IOException | KeyAlreadyExistsException e) {
+        } catch (IOException | KeyAlreadyExistsException | KeyNotExistsException e) {
             e.printStackTrace();
         } finally {
             try{
@@ -225,7 +225,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[22];
         int column;
-        final String castPath = "dataset\\IMDb movies.csv";
+        final String castPath = "dataset\\IMDb movies2.csv";
 
         HashTable<Integer,Movie> hashToReturn = new ClosedHashTable<>(496187, 0.75f); //ajustar tamanio
 
@@ -274,13 +274,14 @@ public abstract class fileReader {
 
                 // Float casts: avgVote, metaScore, reviewsFromUsers, reviewsFromCritics
                 Float avgVote = null;
-                if (!row[14].equals("")) avgVote = Float.parseFloat(row[14]);
+                if (row[14] != null) {if (!row[14].equals("")) avgVote = Float.parseFloat(row[14]);};
+
                 Float metaScore = null;
-                if (!row[19].equals("")) metaScore = Float.parseFloat(row[19]);
+                if (row[19] != null) {if (!row[19].equals("")) metaScore = Float.parseFloat(row[19]);};
                 Float reviewsFromUsers = null;
-                if (!row[20].equals("")) reviewsFromUsers = Float.parseFloat(row[20]);
+                if (row[20] != null) {if (!row[20].equals("")) reviewsFromUsers = Float.parseFloat(row[20]);};
                 Float reviewsFromCritics = null;
-                if (!row[21].equals("")) reviewsFromCritics = Float.parseFloat(row[21]);
+                if (row[21] != null) {if (!row[21].equals("")) reviewsFromCritics = Float.parseFloat(row[21]);};
 
                 // ACA ESTA EL OUTPUT
                 // START
@@ -370,7 +371,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[49];
         int column;
-        final String castPath = "dataset\\IMDb names.csv";  /**"dataset\\IMDb ratings.csv" **/
+        final String castPath = "dataset\\IMDb ratings2.csv";  /**"dataset\\IMDb ratings.csv" **/
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
@@ -487,7 +488,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[6];
         int column;
-        final String titlePrincipalsPath = "dataset\\IMDb title_principals.csv";
+        final String titlePrincipalsPath = "dataset\\IMDb title_principals2.csv";
 
         DoubleHashTable<Integer, Integer, MovieCastMember> hashToReturn = new DoubleHashTableImpl<>(movieHash, memberHash); //FIXME esto va a ser un doble hash
 
@@ -526,20 +527,19 @@ public abstract class fileReader {
                     Integer ordering = null;
                     if (!row[1].equals("")) ordering = Integer.parseInt(row[3]);
 
+                    // characters -> list
                     String[] characters = row[5].split(",");
 
+                    // get movie & castMember
                     Movie movie = movieHash.get(row[0].hashCode());
                     CastMember castMember = memberHash.get(row[2].hashCode());
-
-                    // FIXME terminar de modificar los datos para crear la entidad, adaptar donde se llama la funcion para recibir dobleHashTable
 
                     MovieCastMember movieCastMemberToAdd = new MovieCastMember(movie, ordering, castMember, row[3], row[4], characters);
 
                     hashToReturn.put(
                             movieHash.getPosition(row[0].hashCode()),
                             memberHash.getPosition(row[2].hashCode()),
-                            movieCastMemberToAdd
-                    );
+                            movieCastMemberToAdd);
 
                     column = 0;
                     inQuotes = false;
@@ -557,7 +557,4 @@ public abstract class fileReader {
         }
         return hashToReturn;
     }
-
-
-
 }

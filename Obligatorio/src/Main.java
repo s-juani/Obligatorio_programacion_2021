@@ -20,18 +20,18 @@ public class Main{
 
     //especificar tamaño de las tablas en los constructores
 
-    public void cargaDatos() {
+    public static void main(String[] args) {
+        cargaDatos();
+    }
+
+
+    public static void cargaDatos() {
 
         castMemberHash = fileReader.readCastMember(); //carga causeOfDeathHash y castMemberHash
         movieHash = fileReader.readMovie();  //carga movieHash y ratingHash
         movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash);
 
-        fileReader.readMovieRating(movieHash);
-
-
-
-        //fileReader.readMovieRating(movieRatingHash);
-
+        //fileReader.readMovieRating(movieHash);
 
     }
 
