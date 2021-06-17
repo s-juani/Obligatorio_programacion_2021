@@ -5,11 +5,11 @@ import TADs.ClosedHash.*;
 public class DoubleHashTableImpl<RK,RV,CK,CV,TV> implements DoubleHashTable<RK,CK,TV> {
 
     private TV[][] table;
-    private ClosedHashTable<RK, RV> row;
-    private ClosedHashTable<CK, CV> column;
+    private HashTable<RK, RV> row;
+    private HashTable<CK, CV> column;
     private int count;
 
-    public DoubleHashTableImpl(ClosedHashTable<RK, RV> row, ClosedHashTable<CK, CV> column) {
+    public DoubleHashTableImpl(HashTable<RK, RV> row, HashTable<CK, CV> column) {
         this.table = (TV[][]) new Object[row.tableSize()][column.tableSize()];
         this.row = row;
         this.column = column;

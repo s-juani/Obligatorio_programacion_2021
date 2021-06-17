@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
     @Test
-    public void castMemberTest(){
+    public void causeOfDeathTest(){
         String row = ",cause1,, cause2 and, cause3";
         MyArrayList<String> causes = new MyArrayListImpl<>(5);
         for (String t : row.split(",")) {
@@ -23,5 +23,14 @@ class MainTest {
         }
         assertTrue(true);
     }
+
+    @Test
+    public void test1(){
+        Object[] top5 = new Object[5];
+        top5[4]= new Object[]{1, 2,3};
+        assertTrue(true);
+    }
+
+
 
 }

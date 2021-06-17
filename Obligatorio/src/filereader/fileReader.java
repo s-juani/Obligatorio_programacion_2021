@@ -231,7 +231,7 @@ public abstract class fileReader {
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
-            line = reader.readLine();
+            line = reader.readLine(); //saltear cabezales de columna
             column = 0;
             int current;
             int start;
@@ -363,9 +363,6 @@ public abstract class fileReader {
         return hashToReturn;
 
     }
-
-
-
 
 
     public static void readMovieRating(HashTable<Integer, Movie> movieHash){
@@ -516,32 +513,39 @@ public abstract class fileReader {
                 if (column == row.length-1){
                     row[column] = line.substring(start, current);
 
-
-
-                    // (int)ordering
-                    int ordering;
-                    if (!row[1].isEmpty()){
-                        ordering = Integer.parseInt(row[1]);
-                    }
-
-
-
                     /**
-                     * row[0] = imdb_title_id
-                     * row[1] = ordering
-                     * row[2] = imdb_name_id
-                     * row[3] = category
-                     * row[4] = job
-                     * row[5] = characters
+                     * row[0] String imdb_title_id
+                     * row[1] Integer ordering
+                     * row[2] String imdb_name_id
+                     * row[3] String category
+                     * row[4] String job
+                     * row[5] String[] characters
                      */
 
+                    // (int)ordering
+                    Integer ordering = null;
+                    if (!row[1].equals("")) ordering = Integer.parseInt(row[3]);
+
+                    String[] characters = row[5].split(",");
+
+                    Movie movie = movieHash.get(row[0].hashCode());
+                    CastMember castMember = memberHash.get(row[2].hashCode());
+
                     // FIXME terminar de modificar los datos para crear la entidad, adaptar donde se llama la funcion para recibir dobleHashTable
+
+                    MovieCastMember movieCastMemberToAdd = new MovieCastMember(movie, ordering, castMember, row[3], row[4], characters);
+
+                    hashToReturn.put(
+                            movieHash.getPosition(row[0].hashCode()),
+                            memberHash.getPosition(row[2].hashCode()),
+                            movieCastMemberToAdd
+                    );
 
                     column = 0;
                     inQuotes = false;
                 }
             }
-        } catch (IOException e){
+        } catch (IOException | KeyNotExistsException | KeyAlreadyExistsException e){
             e.printStackTrace();
         } finally {
             try{

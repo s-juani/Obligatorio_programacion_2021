@@ -72,6 +72,11 @@ public class HeapImpl<T extends Comparable<T>,V> implements Heap<T,V> {
         }
     }
 
+
+    public Object[] top() throws HeapOverflowException, EmptyHeapException {
+        return new Object[]{array[0].getKey(),array[0].getValue()};
+    }
+
     private int fatherPosition(int childPosition) throws HeapOverflowException {
         if (childPosition>0) return (childPosition-1)/2;
         else throw new HeapOverflowException();
