@@ -50,6 +50,21 @@ public class HeapImpl<T extends Comparable<T>,V> implements Heap<T,V> {
             return new Object[]{elementToRemove.getKey(),elementToRemove.getValue()};
         } else throw new EmptyHeapException();
     }
+    public void delete() throws HeapOverflowException, EmptyHeapException {
+        if (count!=0) {
+            HeapNode<T,V> elementToRemove = array[0];
+            array[0] = array[count-1];
+            switch (tipo) {
+                case "max":
+                    removeReorderMax(0);
+                    break;
+                case "min":
+                    removeReorderMin(0);
+                    break;
+            }
+            count--;;
+        } else throw new EmptyHeapException();
+    }
     public int size() {
         return count;
     }

@@ -9,4 +9,5 @@ public interface Heap<T extends Comparable<T>, V> {
     int size();
     void print();
     Object[] top() throws HeapOverflowException, EmptyHeapException;
+    void delete() throws HeapOverflowException, EmptyHeapException;
 }

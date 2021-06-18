@@ -39,7 +39,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[17];
         int column;
-        final String castPath = "dataset\\IMDb names2.csv";
+        final String castPath = "dataset\\IMDb names 2.csv";
 
         HashTable<Integer,CastMember> hashToReturn = new ClosedHashTable<>(496187, 0.75f);
 
@@ -103,7 +103,7 @@ public abstract class fileReader {
                     if (!row[10].equals("")){
                         row[10] = row[10].substring(1,row[10].length()-1);
                         String[] deathArray = row[10].split(",");
-                        if (deathArray.length>=3) {
+                        if (deathArray.length>3) {
                             death[0] = deathArray[0]; //city
                             death[1] = deathArray[1]; //state
                             for (int i = 2; i < deathArray.length; i++) death[2] = death[2] + deathArray[i]; //countr
@@ -111,7 +111,7 @@ public abstract class fileReader {
                         else if (deathArray.length==2){
                             death[0]=deathArray[0]; //city
                             death[2]=deathArray[1]; //country
-                        } else if (deathArray.length==0) death[2]=deathArray[0]; //country
+                        } else if (deathArray.length==1) death[2]=deathArray[0]; //country
                     }
 
                     //cause of death -> to list
@@ -200,7 +200,7 @@ public abstract class fileReader {
                     //System.out.println(" ");
                     //------------
 
-                    hashToReturn.put(memberToAdd.getImdbNameId().hashCode(),memberToAdd);
+                    hashToReturn.put(memberToAdd.hashCode(),memberToAdd);
 
                     column = 0;
                     inQuotes = false;
@@ -344,7 +344,7 @@ public abstract class fileReader {
                     //System.out.println(" ");
                     //------------
 
-                    hashToReturn.put(movieToAdd.getImdbTitleId().hashCode(),movieToAdd);
+                    hashToReturn.put(movieToAdd.hashCode(),movieToAdd);
 
                     column = 0;
                     inQuotes = false;
@@ -531,15 +531,17 @@ public abstract class fileReader {
                     String[] characters = row[5].split(",");
 
                     // get movie & castMember
-                    Movie movie = movieHash.get(row[0].hashCode());
-                    CastMember castMember = memberHash.get(row[2].hashCode());
+                    Integer movieHashCode = Integer.parseInt(row[0].substring(2));
+                    Movie movie = movieHash.get(movieHashCode);
+
+                    Integer castMemberHashCode = Integer.parseInt(row[2].substring(2));
+                    CastMember castMember = memberHash.get(castMemberHashCode);
+
+                    castMember.setMovieRoles(row[3]);
 
                     MovieCastMember movieCastMemberToAdd = new MovieCastMember(movie, ordering, castMember, row[3], row[4], characters);
 
-                    hashToReturn.put(
-                            movieHash.getPosition(row[0].hashCode()),
-                            memberHash.getPosition(row[2].hashCode()),
-                            movieCastMemberToAdd);
+                    hashToReturn.put(movieHashCode, castMemberHashCode, movieCastMemberToAdd);
 
                     column = 0;
                     inQuotes = false;

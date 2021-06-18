@@ -53,6 +53,24 @@ public class DoubleHashTableImpl<RK,RV,CK,CV,TV> implements DoubleHashTable<RK,C
         }
     }
 
+    public int rowSize(RK rowKey) throws KeyNotExistsException {
+        int rowPosition = row.getPosition(rowKey);
+        int size = 0;
+        for (int i=0; i<row.tableSize(); i++){
+            if (table[rowPosition][i]!=null) size ++;
+        }
+        return size;
+    }
+
+    public int columnSize(CK columnKey) throws KeyNotExistsException {
+        int columnPosition = column.getPosition(columnKey);
+        int size = 0;
+        for (int i=0; i<row.tableSize(); i++){
+            if (table[i][columnPosition]!=null) size ++;
+        }
+        return size;
+    }
+
     public int size() {
         return count;
     }

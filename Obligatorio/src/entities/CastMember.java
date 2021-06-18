@@ -4,6 +4,8 @@ import TADs.ClosedHash.ClosedHashTable;
 import TADs.ClosedHash.HashTable;
 import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
 import TADs.ClosedHash.exceptions.KeyNotExistsException;
+import TADs.LinkedList.ListaEnlazada;
+import TADs.LinkedList.interfaces.Lista;
 import TADs.hash.MyClosedHashImpl;
 import TADs.hash.MyHash;
 import TADs.hash.exceptions.invalidHashcodeMethod;
@@ -12,8 +14,9 @@ import java.util.Date;
 
 public class CastMember {
 
-    //private static MyHash<Integer,CauseOfDeath> causeOfDeathList = new MyClosedHashImpl<>(30,0.8);
-    private static HashTable<Integer,CauseOfDeath> causeOfDeathList = new ClosedHashTable(30,0.7f);
+    public static Lista<CastMember> iterator = new ListaEnlazada<>(); // new: para iterar sobre las instancias de CastMember
+
+    private static HashTable<Integer,CauseOfDeath> causeOfDeathList = new ClosedHashTable<>(30,0.7f);
 
     private final String imdbNameId;
     private final String name;
@@ -34,6 +37,7 @@ public class CastMember {
     private final Integer divorces;
     private final Integer spousesWithChildren;
     private final Integer children;
+    private Lista<String> movieRoles = new ListaEnlazada<>();
 
     public CastMember(String imdbNameId, String name, String birthName, Integer height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String[] reasonOfDeath, String spousesString, Integer spouses, Integer divorces, Integer spousesWithChildren, Integer children) throws KeyNotExistsException, KeyAlreadyExistsException {
         this.imdbNameId = imdbNameId;       //0
@@ -55,6 +59,7 @@ public class CastMember {
         this.divorces = divorces;           //14
         this.spousesWithChildren = spousesWithChildren; //15
         this.children = children;           //16
+        iterator.add(this);
     }
 
 
@@ -114,6 +119,14 @@ public class CastMember {
     }
     public Integer getChildren() {
         return children;
+    }
+
+    public Lista<String> getMovieRoles() {
+        return movieRoles;
+    }
+
+    public void setMovieRoles(String rol) {
+        movieRoles.add(rol);
     }
 
     public boolean equals(Object o){
