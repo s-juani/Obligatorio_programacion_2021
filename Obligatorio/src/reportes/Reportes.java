@@ -4,7 +4,12 @@ import TADs.ClosedHash.HashTable;
 import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
 import TADs.ClosedHash.exceptions.KeyNotExistsException;
 import TADs.DoubleHash.DoubleHashTable;
+import TADs.LinkedList.ListaEnlazada;
 import TADs.LinkedList.Nodo;
+import TADs.LinkedList.PriorityNode;
+import TADs.LinkedList.exceptions.EmptyQueueException;
+import TADs.LinkedList.interfaces.ListWithPriority;
+import TADs.LinkedList.interfaces.PriorityQueue;
 import TADs.heap.Heap;
 import TADs.heap.HeapImpl;
 import TADs.heap.exceptions.EmptyHeapException;
@@ -17,10 +22,31 @@ import entities.MovieCastMember;
 public abstract class Reportes {
 
     // top 5 de actores/actrices segun cantidad de apariciones en peliculas
-    public static Object[] reporte1(DoubleHashTable<Integer, Integer, MovieCastMember> movieCastMemberHash) throws KeyNotExistsException, KeyAlreadyExistsException, HeapOverflowException, EmptyHeapException {
-        Object[] top5 = new Object[5];
+    public static Object[][] reporte1() throws KeyNotExistsException, KeyAlreadyExistsException, HeapOverflowException, EmptyHeapException, EmptyQueueException {
+
+        Object[][] top5 = new Object[5][2];
+        ListWithPriority<CastMember> topList = new ListaEnlazada<>();
+        for (Nodo<MovieCastMember> movieCastMember = MovieCastMember.getIterator().getHead(); movieCastMember.getNext()!=null; movieCastMember=movieCastMember.getNext()){
+            CastMember member = movieCastMember.getValue().getCastMember();
+            Movie movie = movieCastMember.getValue().getMovie();
+            PriorityNode<CastMember> temp = topList.findPriorityNode(member);
+            if (movieCastMember.getValue().getCategory().equals("actor") || movieCastMember.getValue().getCategory().equals("actress")) {
+                if (temp == null) {
+                    topList.enqueueWithPriority(member, 1);
+                } else {
+                    temp.setPriority(temp.getPriority() + 1);
+                }
+            }
+        }   // se obtiene lista de los actores ordenada por cantidad de apariciones en peliculas
+
+        for (int p=0; p<5; p++){
+            top5[p] = new Object[]{topList.getPriorityHead().getPriority(),topList.dequeue()};
+        }   // se extraen los 5 primeros con sus respectivas cantidades de apariciones
+
+        return top5;
+
+        /*
         Heap<Integer, CastMember> topHeap = new HeapImpl<>(5,"min");
-        int i = 0;
         for (Nodo<CastMember> member = CastMember.iterator.getHead(); member.getNext()!=null; member = member.getNext()){
             if (member.getValue().getMovieRoles().find("actor") ||
                     member.getValue().getMovieRoles().find("actress")) { // FIXME seleccionar solo las apariciones como actores
@@ -34,13 +60,28 @@ public abstract class Reportes {
                 }
             }
         }
-
-        for (int p=4; p>=0; p--){
-            top5[i] = topHeap.remove();
-        }
-
-        return top5;
+         */
     }
+
+    //prueba reporte1
+    public static void showReporte1() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
+        Object[][] top5 = Reportes.reporte1();
+        for (Object[] t : top5){
+            CastMember member = (CastMember) t[1];
+            int apariciones = (int) t[0];
+            System.out.println("Nombre actor/actriz: " + member.getName());
+            System.out.println("Cantidad de apariciones: " + apariciones + "\n");
+
+        }
+        System.out.println("Tiempo de ejecución de la consulta: "); // tiempo de ejecucion
+    }
+
+
+
+
+
+
+
 
     // top 5 causas de muerte de productores y directores nacidos en Italia, USA, Francia, UK
     // (fallecidos en esos paises tambien?)
@@ -54,6 +95,7 @@ public abstract class Reportes {
 
         return top5;
     }
+
 
     // de las 14 peliculas de 1950-1960 con mas weightedAverage determinar el promedio de altura de los actores (not null)
     public static Object[] reporte3(HashTable<Integer, Movie> movieHash){

@@ -24,12 +24,6 @@ class MainTest {
         assertTrue(true);
     }
 
-    @Test
-    public void test1(){
-        Object[][] top5 = new Object[][]{{1, 2},{3},{2,3,0}};
-        assertTrue(true);
-    }
-
 
 
 }

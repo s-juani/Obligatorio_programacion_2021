@@ -1,17 +1,11 @@
 package filereader;
 
-import TADs.ClosedHash.ClosedHashTable;
-import TADs.ClosedHash.HashTable;
+import TADs.ClosedHash.*;
 import TADs.ClosedHash.exceptions.*;
-import TADs.DoubleHash.DoubleHashTable;
-import TADs.DoubleHash.DoubleHashTableImpl;
-import TADs.arraylist.MyArrayList;
-import TADs.arraylist.MyArrayListImpl;
-import TADs.hash.*;
+import TADs.arraylist.*;
 import entities.*;
 
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.BufferedReader;
@@ -32,7 +26,6 @@ import java.io.IOException;
  */
 
 public abstract class fileReader {
-
 
     public static HashTable<Integer, CastMember> readCastMember(){
         BufferedReader reader = null;
@@ -365,7 +358,6 @@ public abstract class fileReader {
 
     }
 
-
     public static void readMovieRating(HashTable<Integer, Movie> movieHash){
         BufferedReader reader = null;
         String line;
@@ -482,7 +474,7 @@ public abstract class fileReader {
 
     }
 
-    public static DoubleHashTable<Integer, Integer, MovieCastMember> readTitlePrincipals(HashTable<Integer, Movie> movieHash, HashTable<Integer, CastMember> memberHash){
+    public static HashTable<Long, MovieCastMember> readTitlePrincipals(HashTable<Integer, Movie> movieHash, HashTable<Integer, CastMember> memberHash){
 
         BufferedReader reader = null;
         String line;
@@ -490,7 +482,7 @@ public abstract class fileReader {
         int column;
         final String titlePrincipalsPath = "dataset\\IMDb title_principals.csv";
 
-        DoubleHashTable<Integer, Integer, MovieCastMember> hashToReturn = new DoubleHashTableImpl<>(movieHash, memberHash); //FIXME esto va a ser un doble hash
+        HashTable<Long, MovieCastMember> hashToReturn = new ClosedHashTable<>(79,0.5f);
 
         try{
             reader = new BufferedReader(new FileReader(titlePrincipalsPath));
@@ -503,11 +495,12 @@ public abstract class fileReader {
             while((line = reader.readLine()) != null){
                 start = 0;
                 for (current = 0; current < line.length(); current++){
-                    if (line.charAt(current) == '\"') inQuotes = !inQuotes;
-                    else if (line.charAt(current) == ',' && !inQuotes){
+                    char character = line.charAt(current);
+                    if (character == '\"') inQuotes = !inQuotes;
+                    else if (character == ',' && !inQuotes){
                         row[column] = line.substring(start,current);
                         column++;
-                        start = current;
+                        start = current+1;
                     }
                 }
 
@@ -525,7 +518,7 @@ public abstract class fileReader {
 
                     // (int)ordering
                     Integer ordering = null;
-                    if (!row[1].equals("")) ordering = Integer.parseInt(row[3]);
+                    if (!row[1].equals("")) ordering = Integer.parseInt(row[1]);
 
                     // characters -> list
                     String[] characters = row[5].split(",");
@@ -541,7 +534,7 @@ public abstract class fileReader {
 
                     MovieCastMember movieCastMemberToAdd = new MovieCastMember(movie, ordering, castMember, row[3], row[4], characters);
 
-                    hashToReturn.put(movieHashCode, castMemberHashCode, movieCastMemberToAdd);
+                    hashToReturn.put(movieCastMemberToAdd.longHashCode(), movieCastMemberToAdd);
 
                     column = 0;
                     inQuotes = false;

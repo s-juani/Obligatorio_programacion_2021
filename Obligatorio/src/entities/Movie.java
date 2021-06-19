@@ -1,11 +1,19 @@
 package entities;
 
+import TADs.LinkedList.ListaEnlazada;
+import TADs.LinkedList.interfaces.Lista;
 import TADs.arraylist.MyArrayList;
 import TADs.arraylist.MyArrayListImpl;
 
 import java.util.Date;
 
 public class Movie {
+
+   private static Lista<Movie> iterator = new ListaEnlazada<>();
+
+   public static Lista<Movie> getIterator() {
+      return iterator;
+   }
 
    private String imdbTitleId;
    private String title;
@@ -56,6 +64,7 @@ public class Movie {
       this.reviewsFromUsers = reviewsFromUsers;
       this.reviewsFromCritics = reviewsFromCritics;
       this.rating = null;
+      iterator.add(this);
    }
 
    public MovieRating getRating() {

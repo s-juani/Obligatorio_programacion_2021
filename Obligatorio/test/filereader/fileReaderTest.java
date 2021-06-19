@@ -2,15 +2,17 @@ package filereader;
 
 import TADs.ClosedHash.ClosedHashTable;
 import TADs.ClosedHash.HashTable;
-import TADs.ClosedHash.exceptions.KeyNotExistsException;
-import TADs.DoubleHash.DoubleHashTable;
-import TADs.hash.MyClosedHashImpl;
-import TADs.hash.MyHash;
+import TADs.ClosedHash.exceptions.*;
+import TADs.LinkedList.exceptions.EmptyQueueException;
+import TADs.LinkedList.interfaces.Lista;
+import TADs.heap.exceptions.EmptyHeapException;
+import TADs.heap.exceptions.HeapOverflowException;
 import entities.CastMember;
 import entities.CauseOfDeath;
 import entities.Movie;
 import entities.MovieCastMember;
 import org.junit.jupiter.api.Test;
+import reportes.Reportes;
 
 import java.util.Arrays;
 
@@ -45,19 +47,14 @@ public class fileReaderTest {
     }
 
     @Test
-    public void testMovieCastMember(){
+    public void testMovieCastMember() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, EmptyQueueException, KeyAlreadyExistsException {
         HashTable<Integer, CastMember> castMemberHash = fileReader.readCastMember();
         HashTable<Integer, Movie> castMovie = fileReader.readMovie();
-        DoubleHashTable<Integer, Integer, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(castMovie,castMemberHash);
-
-
+        HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(castMovie,castMemberHash);
+        Lista<MovieCastMember> newList = MovieCastMember.getIterator();
+        HashTable<Integer, CauseOfDeath> causeOfDeathHashTable = CastMember.getCauseOfDeathHash();
+        Reportes.showReporte1();
     }
 
 
-    @Test
-    public void test2(){
-        Integer[][] prueba = new Integer[35000][35000];
-
-
-    }
 }

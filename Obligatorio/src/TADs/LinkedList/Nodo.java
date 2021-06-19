@@ -1,7 +1,7 @@
 package TADs.LinkedList;
 
 public class Nodo<T> {
-    public T value;
+    private T value;
 
     private Nodo<T> next;
 

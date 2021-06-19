@@ -14,7 +14,15 @@ import java.util.Date;
 
 public class CastMember {
 
-    public static Lista<CastMember> iterator = new ListaEnlazada<>(); // new: para iterar sobre las instancias de CastMember
+    private static Lista<CastMember> iterator = new ListaEnlazada<>(); // new: para iterar sobre las instancias de CastMember
+
+    public static Lista<CastMember> getIterator() {
+        return iterator;
+    }
+
+    public static HashTable<Integer, CauseOfDeath> getCauseOfDeathHash() {
+        return causeOfDeathHash;
+    }
 
     private static HashTable<Integer,CauseOfDeath> causeOfDeathHash = new ClosedHashTable<>(30,0.7f);
 

@@ -26,7 +26,10 @@ public class ClosedHashTable<K,V> implements HashTable<K,V> {
     }
 
     public void put(K key, V value) throws KeyAlreadyExistsException {
-        if (contains(key)) throw new KeyAlreadyExistsException();
+        if (contains(key)) {
+            System.out.println(key.toString());
+            throw new KeyAlreadyExistsException();
+        }
         else {
             if (count < table.length * loadFactor) {
                 HashTableNode<K, V> newNode = new HashTableNode<>(key,value);

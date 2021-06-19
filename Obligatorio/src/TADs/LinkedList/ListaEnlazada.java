@@ -4,7 +4,7 @@ import TADs.LinkedList.exceptions.*;
 import TADs.LinkedList.interfaces.*;
 
 
-public class ListaEnlazada<T> implements Lista<T>, Stack<T>, Queue<T>, DoubleQueue<T>, PriorityQueue<T> {
+public class ListaEnlazada<T> implements Lista<T>, Stack<T>, Queue<T>, DoubleQueue<T>, PriorityQueue<T>, ListWithPriority<T> {
 
     private int count;
     private Nodo<T> head;
@@ -91,17 +91,16 @@ public class ListaEnlazada<T> implements Lista<T>, Stack<T>, Queue<T>, DoubleQue
         return found;
     }
     public Nodo<T> findNode(T value) {
-        Nodo<T> nodoActual = new Nodo<>(null);
-        if (this.find(value)) {
-            nodoActual = this.head;
-            while (nodoActual != null) {
-                if (nodoActual.getValue().equals(value)) {
-                    break;
-                }
-                nodoActual = nodoActual.getNext();
+        Nodo<T> getNode = null;
+        Nodo<T> temp = this.head;
+        while (temp != null) {
+            if (temp.getValue().equals(value)) {
+                getNode = temp;
+                break;
             }
+            temp = temp.getNext();
         }
-        return nodoActual;
+        return getNode;
     }
     public Nodo<T> findPrevNode(T value){
         Nodo<T> nodoActual = new Nodo<>(null);
@@ -327,6 +326,23 @@ public class ListaEnlazada<T> implements Lista<T>, Stack<T>, Queue<T>, DoubleQue
             addInPosicion(element1,posicion2);
         }
 
+    }
+
+    //ListWithPriority
+    public PriorityNode<T> findPriorityNode(T value){
+        PriorityNode<T> getNode = null;
+        PriorityNode<T> temp = (PriorityNode<T>) this.head;
+        while (temp != null) {
+            if (temp.getValue().equals(value)) {
+                getNode = temp;
+                break;
+            }
+            temp = (PriorityNode<T>) temp.getNext();
+        }
+        return getNode;
+    }
+    public PriorityNode<T> getPriorityHead() {
+        return (PriorityNode<T>) head;
     }
 
 }

@@ -1,6 +1,15 @@
 package entities;
 
+import TADs.LinkedList.ListaEnlazada;
+import TADs.LinkedList.interfaces.Lista;
+
 public class MovieCastMember {
+
+    private static Lista<MovieCastMember> iterator = new ListaEnlazada<>();
+
+    public static Lista<MovieCastMember> getIterator() {
+        return iterator;
+    }
 
     private Movie movie; //new
     private Integer ordering;
@@ -16,6 +25,11 @@ public class MovieCastMember {
         this.category = category;
         this.job = job;
         this.characters = characters;
+        iterator.add(this);
+    }
+
+    public long longHashCode(){
+        return (long) movie.hashCode()*10000000L + castMember.hashCode();
     }
 
     public boolean equals (Object o){

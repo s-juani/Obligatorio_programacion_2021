@@ -2,7 +2,7 @@ package TADs.LinkedList;
 
 public class PriorityNode<T> extends Nodo<T> {
 
-    public int priority;
+    private int priority;
 
     public PriorityNode(T value, int prioridad) {
         super(value);
