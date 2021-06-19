@@ -1,3 +1,5 @@
+package reportes;
+
 import TADs.ClosedHash.HashTable;
 import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
 import TADs.ClosedHash.exceptions.KeyNotExistsException;

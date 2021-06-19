@@ -39,10 +39,9 @@ public abstract class fileReader {
         String line;
         String[] row = new String[17];
         int column;
-        final String castPath = "dataset\\IMDb names 2.csv";
+        final String castPath = "dataset\\IMDb names.csv";
 
-        HashTable<Integer,CastMember> hashToReturn = new ClosedHashTable<>(496187, 0.75f);
-
+        HashTable<Integer,CastMember> hashToReturn = new ClosedHashTable<>(37,0.5f);
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
@@ -156,6 +155,7 @@ public abstract class fileReader {
                         }
                     }
 
+
                     CastMember memberToAdd = new CastMember(row[0], row[1], row[2], height, row[4],
                                                             birthDate,      // row[6] buscar como castear a Date
                                                             birth[0],       //row[7] array con birth city, state, country
@@ -171,6 +171,7 @@ public abstract class fileReader {
                                                             divorces,
                                                             spousesWithChildren,
                                                             children);
+
 
                     /**
                      *                             row[0],
@@ -199,7 +200,6 @@ public abstract class fileReader {
                     //}
                     //System.out.println(" ");
                     //------------
-
                     hashToReturn.put(memberToAdd.hashCode(),memberToAdd);
 
                     column = 0;
@@ -225,9 +225,9 @@ public abstract class fileReader {
         String line;
         String[] row = new String[22];
         int column;
-        final String castPath = "dataset\\IMDb movies2.csv";
+        final String castPath = "dataset\\IMDb movies.csv";
 
-        HashTable<Integer,Movie> hashToReturn = new ClosedHashTable<>(496187, 0.75f); //ajustar tamanio
+        HashTable<Integer,Movie> hashToReturn = new ClosedHashTable<>(37, 0.5f); //ajustar tamanio
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
@@ -488,7 +488,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[6];
         int column;
-        final String titlePrincipalsPath = "dataset\\IMDb title_principals2.csv";
+        final String titlePrincipalsPath = "dataset\\IMDb title_principals.csv";
 
         DoubleHashTable<Integer, Integer, MovieCastMember> hashToReturn = new DoubleHashTableImpl<>(movieHash, memberHash); //FIXME esto va a ser un doble hash
 

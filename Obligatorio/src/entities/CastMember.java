@@ -16,7 +16,7 @@ public class CastMember {
 
     public static Lista<CastMember> iterator = new ListaEnlazada<>(); // new: para iterar sobre las instancias de CastMember
 
-    private static HashTable<Integer,CauseOfDeath> causeOfDeathList = new ClosedHashTable<>(30,0.7f);
+    private static HashTable<Integer,CauseOfDeath> causeOfDeathHash = new ClosedHashTable<>(30,0.7f);
 
     private final String imdbNameId;
     private final String name;
@@ -150,11 +150,10 @@ public class CastMember {
         int i = 0;
         for (String reason : reasons) {
             temp = new CauseOfDeath(reason);
-            CauseOfDeath exists = causeOfDeathList.get(temp.hashCode());
-            if (exists == null){
-                causeOfDeathList.put(temp.hashCode(),temp);
+            if (!causeOfDeathHash.contains(temp.hashCode())){
+                causeOfDeathHash.put(temp.hashCode(),temp);
             } else {
-                 temp = exists;
+                 temp = causeOfDeathHash.get(temp.hashCode());
             }
             causes[i] = temp;
             i++;

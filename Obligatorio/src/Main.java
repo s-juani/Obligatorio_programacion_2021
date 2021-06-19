@@ -8,6 +8,7 @@ import TADs.heap.exceptions.EmptyHeapException;
 import TADs.heap.exceptions.HeapOverflowException;
 import entities.*;
 import filereader.*;
+import reportes.Reportes;
 
 public class Main{
 
@@ -24,7 +25,6 @@ public class Main{
 
     public static void main(String[] args) throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException {
         menuPrincipal();
-
     }
 
     public static void menuPrincipal() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException {
@@ -43,6 +43,9 @@ public class Main{
                 break;
             case 3:
                 salir();
+                break;
+            default:
+                menuPrincipal();
 
         }
     }
@@ -55,7 +58,7 @@ public class Main{
         System.out.println("5. Indicar el Top 10 de géneros de películas más populares, en las cuales al menos un actor/actriz tiene 2 o más hijos.");
         System.out.println("6. Salir");
         String input = null;   //FIXME input ??
-        int opcion = Integer.parseInt(input); //controlar que no sea null, entero o no este en el rango 1-6
+        int opcion = Integer.parseInt(input); //controlar que no sea null
         switch (opcion){
             case 1:
                 showReporte1();
@@ -74,6 +77,9 @@ public class Main{
                 break;
             case 6:
                 salir();
+                break;
+            default:
+                menuReportes();
         }
     }
 
