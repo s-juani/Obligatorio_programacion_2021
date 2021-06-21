@@ -11,16 +11,16 @@ import entities.*;
 import filereader.*;
 import reportes.Reportes;
 
+import java.util.Scanner;
+
 public class Main{
 
     public static HashTable<Integer, CastMember> castMemberHash;
     public static HashTable<Integer, Movie> movieHash;
     public static HashTable<Long, MovieCastMember> movieCastMemberHash;
 
-
     public static HashTable<Integer, Rating> ratingHash;
     public static HashTable<Integer, MovieRating> movieRatingHash = new ClosedHashTable<>(); //revisar si usar otra  TAD
-
 
     //especificar tamaño de las tablas en los constructores
 
@@ -29,25 +29,26 @@ public class Main{
     }
 
     public static void menuPrincipal() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
-        System.out.println("1. Carga de datos");
-        System.out.println("2. Ejecutar consultas");
-        System.out.println("3. Salir");
-        String input = null;   //FIXME input ??
-        int opcion = Integer.parseInt(input); //controlar que no sea null, entero o no este en el rango 1,2,3
-        switch (opcion){
-            case 1:
-                cargaDatos();
-                System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: " + "\n"); //tiempo de ejecucion?
-                break;
-            case 2:
-                menuReportes();
-                break;
-            case 3:
-                salir();
-                break;
-            default:
-                menuPrincipal();
+        while (true){
 
+            //init userInput scanner
+            Scanner sc = new Scanner(System.in);
+
+            System.out.println("1. Carga de datos");
+            System.out.println("2. Ejecutar consultas");
+            System.out.println("3. Salir");
+
+            int opcion = sc.nextInt();   //FIXME input ??
+            //int opcion = Integer.parseInt(input); //controlar que no sea null, entero o no este en el rango 1,2,3
+            switch (opcion) {
+                case 1 -> {
+                    cargaDatos();
+                    System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: " + "\n"); //FIXME tiempo de ejecucion?
+                }
+                case 2 -> menuReportes();
+                case 3 -> salir();
+                default -> menuPrincipal();
+            }
         }
     }
 
@@ -58,29 +59,19 @@ public class Main{
         System.out.println("4. Indicar el año más habitual en el que nacen los actores y las actrices.");
         System.out.println("5. Indicar el Top 10 de géneros de películas más populares, en las cuales al menos un actor/actriz tiene 2 o más hijos.");
         System.out.println("6. Salir");
-        String input = null;   //FIXME input ??
-        int opcion = Integer.parseInt(input); //controlar que no sea null
-        switch (opcion){
-            case 1:
-                showReporte1();
-                break;
-            case 2:
-                showReporte2();
-                break;
-            case 3:
-                showReporte3();
-                break;
-            case 4:
-                showReporte4();
-                break;
-            case 5:
-                showReporte5();
-                break;
-            case 6:
-                salir();
-                break;
-            default:
-                menuReportes();
+
+        //init userInput scanner
+        Scanner sc = new Scanner(System.in);
+
+        int opcion = sc.nextInt(); //controlar que no sea null
+        switch (opcion) {
+            case 1 -> showReporte1();
+            case 2 -> showReporte2();
+            case 3 -> showReporte3();
+            case 4 -> showReporte4();
+            case 5 -> showReporte5();
+            case 6 -> salir();
+            default -> menuReportes();
         }
     }
 
@@ -138,7 +129,7 @@ public class Main{
         menuReportes();
     }
     public static void salir(){
-        //terminar programa
+        System.exit(0);
     }
 
     public static void cargaDatos() {
