@@ -55,6 +55,7 @@ public class ListaEnlazada<T> implements Lista<T>, Stack<T>, Queue<T>, DoubleQue
                     nodoAnterior.setNext(nodoEliminar.getNext());
                     if (nodoAnterior.getNext()==null) tail = nodoAnterior;
                     count -= 1;
+                    break;
                 }
                 if (nodoAnterior.getNext() != null) nodoAnterior = nodoAnterior.getNext();
             }
@@ -163,7 +164,7 @@ public class ListaEnlazada<T> implements Lista<T>, Stack<T>, Queue<T>, DoubleQue
                 }
                 nodo.setNext(actual.getNext());
                 actual.setNext(nodo);
-                if (posicion == count-1) tail = actual;
+                if (posicion == count) tail = actual;
             }
             count+=1;
         }

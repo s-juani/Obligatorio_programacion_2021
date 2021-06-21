@@ -26,15 +26,16 @@ public abstract class Reportes {
 
         Object[][] top5 = new Object[5][2];
         ListWithPriority<CastMember> topList = new ListaEnlazada<>();
-        for (Nodo<MovieCastMember> movieCastMember = MovieCastMember.getIterator().getHead(); movieCastMember.getNext()!=null; movieCastMember=movieCastMember.getNext()){
+        for (Nodo<MovieCastMember> movieCastMember = MovieCastMember.getIterator().getHead(); movieCastMember!=null; movieCastMember=movieCastMember.getNext()){
             CastMember member = movieCastMember.getValue().getCastMember();
-            Movie movie = movieCastMember.getValue().getMovie();
             PriorityNode<CastMember> temp = topList.findPriorityNode(member);
             if (movieCastMember.getValue().getCategory().equals("actor") || movieCastMember.getValue().getCategory().equals("actress")) {
                 if (temp == null) {
                     topList.enqueueWithPriority(member, 1);
                 } else {
-                    temp.setPriority(temp.getPriority() + 1);
+                    topList.removeValue(temp.getValue());
+                    temp.setNext(null);
+                    topList.enqueueWithPriority(temp.getValue(), temp.getPriority()+1);
                 }
             }
         }   // se obtiene lista de los actores ordenada por cantidad de apariciones en peliculas

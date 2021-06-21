@@ -15,4 +15,5 @@ public interface ListWithPriority<T> {
     boolean find(T value);
     PriorityNode<T> findPriorityNode(T value);
     T get(int position);
+    void removeValue(T value);
 }

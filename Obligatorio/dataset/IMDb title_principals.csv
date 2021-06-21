@@ -2,12 +2,12 @@ imdb_title_id,ordering,imdb_name_id,category,job,characters
 tt0005339,1,nm0000004,actress,,"[""Miss Geraldine Holbrook (Miss Jerry)""]"
 tt0000009,2,nm0000004,actor,,"[""Mr. Hamilton""]"
 tt0000009,3,nm0000007,actor,,"[""Chauncey Depew - the Director of the New York Central Railroad""]"
-tt0000009,4,nm5993616,director,,
+tt0000009,4,nm5993616,actress,,
 tt0000574,1,nm5993616,actress,,"[""Kate Kelly""]"
 tt0000574,2,nm0000001,actor,,"[""School Master""]"
 tt0000574,3,nm0000002,actor,,"[""Steve Hart""]"
 tt0000574,4,nm0000003,actress,,
-tt0000574,5,nm0000004,director,,
+tt0000574,5,nm0000004,actor,,
 tt0000574,6,nm0000005,producer,producer,
 tt0000574,7,nm0000006,producer,producer,
 tt0000574,8,nm0000007,producer,producer,
