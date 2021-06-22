@@ -24,6 +24,18 @@ class MainTest {
         assertTrue(true);
     }
 
+    @Test
+    public void test1(){
+        Long code = 8200742*10000000L + 8572003;
+        System.out.println(code);
+        System.out.println((code.hashCode()));
+        code = -code;
+        System.out.println(code);
+        System.out.println((code.hashCode()));
+        //82007428572003
+
+    }
+
 
 
 }

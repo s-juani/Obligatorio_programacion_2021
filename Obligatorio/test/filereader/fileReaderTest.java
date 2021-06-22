@@ -22,8 +22,10 @@ public class fileReaderTest {
 
     @Test
     public void testFlujoNormal(){
-        fileReader.readCastMember();
-        fileReader.readMovie();
+        HashTable<Integer, CastMember> castMemberHash = fileReader.readCastMember();
+        HashTable<Integer, Movie> movieHash = fileReader.readMovie();
+        fileReader.readMovieRating(movieHash);
+        fileReader.readTitlePrincipals(movieHash,castMemberHash);
     }
 
     @Test
@@ -53,7 +55,7 @@ public class fileReaderTest {
         HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(castMovie,castMemberHash);
         Lista<MovieCastMember> newList = MovieCastMember.getIterator();
         HashTable<Integer, CauseOfDeath> causeOfDeathHashTable = CastMember.getCauseOfDeathHash();
-        Reportes.showReporte1();
+        //Main.showReporte1();
     }
 
 

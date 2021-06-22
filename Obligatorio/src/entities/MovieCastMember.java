@@ -29,7 +29,9 @@ public class MovieCastMember {
     }
 
     public long longHashCode(){
-        return (long) movie.hashCode()*10000000L + castMember.hashCode();
+        long temp = (long) movie.hashCode()*10000000L + castMember.hashCode();
+        if (temp >= 0) return temp;
+        else return -temp;
     }
 
     public boolean equals (Object o){

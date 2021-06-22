@@ -27,14 +27,15 @@ public class ClosedHashTable<K,V> implements HashTable<K,V> {
 
     public void put(K key, V value) throws KeyAlreadyExistsException {
         if (contains(key)) {
-            System.out.println(key.toString());
+            //System.out.println(key.toString());
             throw new KeyAlreadyExistsException();
         }
         else {
             if (count < table.length * loadFactor) {
                 HashTableNode<K, V> newNode = new HashTableNode<>(key,value);
                 int position = hashFunction(key.hashCode());
-                insertInPosition(0,position, newNode);
+                if (position>=0) insertInPosition(0,position, newNode);
+                else insertInPosition(0,-position, newNode);
             } else {
                 rehash();
                 put(key, value);
@@ -61,7 +62,8 @@ public class ClosedHashTable<K,V> implements HashTable<K,V> {
     }
     public int getPosition(K key) throws KeyNotExistsException {
         int position = hashFunction(key.hashCode());
-        return searchNodePosition(0,position,key);
+        if (position>=0) return searchNodePosition(0,position,key);
+        else return searchNodePosition(0,-position,key);
     }
     public int tableSize() {
         return table.length;
@@ -70,7 +72,8 @@ public class ClosedHashTable<K,V> implements HashTable<K,V> {
     private HashTableNode<K, V> getNode(K key) {
         if (count != 0) {
             int position = hashFunction(key.hashCode());
-            return searchNode(0,position,key);
+            if (position>=0) return searchNode(0,position,key);
+            else return searchNode(0,-position,key);
 
         }
         return null;
@@ -91,7 +94,10 @@ public class ClosedHashTable<K,V> implements HashTable<K,V> {
         }
     }
     private int searchNodePosition(int attempt, int position, K key) throws KeyNotExistsException{
-        HashTableNode<K, V> tempNode = table[position];
+        HashTableNode<K, V> tempNode;
+        if (position>=0) tempNode = table[position];
+        else tempNode = table[-position];
+
         if (tempNode==null) throw new KeyNotExistsException();
         else {
             if (tempNode.getKey().equals(key)) {

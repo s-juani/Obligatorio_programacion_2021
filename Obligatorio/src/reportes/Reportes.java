@@ -65,6 +65,7 @@ public abstract class Reportes {
     }
 
     //prueba reporte1
+    /*
     public static void showReporte1() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
         Object[][] top5 = Reportes.reporte1();
         for (Object[] t : top5){
@@ -77,12 +78,7 @@ public abstract class Reportes {
         System.out.println("Tiempo de ejecución de la consulta: "); // tiempo de ejecucion
     }
 
-
-
-
-
-
-
+     */
 
     // top 5 causas de muerte de productores y directores nacidos en Italia, USA, Francia, UK
     // (fallecidos en esos paises tambien?)

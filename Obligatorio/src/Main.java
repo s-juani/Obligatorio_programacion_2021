@@ -38,12 +38,11 @@ public class Main{
             System.out.println("2. Ejecutar consultas");
             System.out.println("3. Salir");
 
-            int opcion = sc.nextInt();   //FIXME input ??
+            int opcion = sc.nextInt();
             //int opcion = Integer.parseInt(input); //controlar que no sea null, entero o no este en el rango 1,2,3
             switch (opcion) {
                 case 1 -> {
                     cargaDatos();
-                    System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: " + "\n"); //FIXME tiempo de ejecucion?
                 }
                 case 2 -> menuReportes();
                 case 3 -> salir();
@@ -76,13 +75,13 @@ public class Main{
     }
 
     public static void showReporte1() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
+
         Object[][] top5 = Reportes.reporte1();
         for (Object[] t : top5){
             CastMember member = (CastMember) t[1];
             int apariciones = (int) t[0];
             System.out.println("Nombre actor/actriz: " + member.getName());
             System.out.println("Cantidad de apariciones: " + apariciones + "\n");
-
         }
         System.out.println("Tiempo de ejecución de la consulta: " + "\n"); // tiempo de ejecucion
         menuReportes();
@@ -134,16 +133,28 @@ public class Main{
 
     public static void cargaDatos() {
 
+        long startTime = System.nanoTime();
+
         castMemberHash = fileReader.readCastMember(); //carga causeOfDeathHash y castMemberHash
         movieHash = fileReader.readMovie();  //carga movieHash y ratingHash
         movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash);
+        fileReader.readMovieRating(movieHash);
 
-        //fileReader.readMovieRating(movieHash);
+        long finishTime = System.nanoTime();
+        finishTime -= startTime;
+        finishTime /= 1000000;
+
+        System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: " + finishTime + "ms");
+
 
     }
 
-
-
+/*
+    long startTime = System.nanoTime();
+    long finishTime = System.nanoTime();
+    finishTime -= startTime;
+    finishTime /= 1000000;
+    */
 
 
 

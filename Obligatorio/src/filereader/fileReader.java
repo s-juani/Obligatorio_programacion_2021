@@ -32,9 +32,9 @@ public abstract class fileReader {
         String line;
         String[] row = new String[17];
         int column;
-        final String castPath = "dataset\\IMDb names.csv";
+        final String castPath = "dataset\\IMDb names2.csv";
 
-        HashTable<Integer,CastMember> hashToReturn = new ClosedHashTable<>(37,0.5f);
+        HashTable<Integer,CastMember> hashToReturn = new ClosedHashTable<>(595411,0.5f);
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
@@ -218,9 +218,9 @@ public abstract class fileReader {
         String line;
         String[] row = new String[22];
         int column;
-        final String castPath = "dataset\\IMDb movies.csv";
+        final String castPath = "dataset\\IMDb movies2.csv";
 
-        HashTable<Integer,Movie> hashToReturn = new ClosedHashTable<>(37, 0.5f); //ajustar tamanio
+        HashTable<Integer,Movie> hashToReturn = new ClosedHashTable<>(171711, 0.5f); //ajustar tamanio
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
@@ -242,7 +242,11 @@ public abstract class fileReader {
                 }
                 // Integer casts: year, duration, votes
                 Integer year = null;
-                if (!row[3].equals("")) year = Integer.parseInt(row[3]);
+                try{
+                    if (!row[3].equals("")) year = Integer.parseInt(row[3]);
+                } catch (Exception e){
+                    //ignore
+                }
                 Integer duration = null;
                 if (!row[6].equals("")) duration = Integer.parseInt(row[6]);
                 Integer votes = null;
@@ -395,12 +399,120 @@ public abstract class fileReader {
 
                     Movie movie = movieHash.get(movieHashCode);
 
+                    //weighted_average_vote
+                    if (!row[1].isEmpty()){
+                        movieRating.setWeightedAverage(Float.parseFloat(row[1]));
+                    }
+
+                    //total_votes
+                    if (!row[2].isEmpty()){
+                        movieRating.setTotalVotes(Integer.parseInt(row[2]));
+                    }
+
+                    //mean_vote
+                    if (!row[3].isEmpty()){
+                        movieRating.setMeanVote(Float.parseFloat(row[3]));
+                    }
+
+                    //median_vote
+                    if (!row[4].isEmpty()){
+                        movieRating.setMedianVote(Float.parseFloat(row[4]));
+                    }
+
+                    //votes_list
+                    Integer[] votesRating = new Integer[10];
+                    int j=0;
+                    for (int i=5; i<15; i++){
+                        votesRating[j] = Integer.parseInt(row[i]);
+                        j++;
+                    }
+                    movieRating.setVotesRating(votesRating);
+
+
+                    Float numberVotes;
+                    Float averageRating;
+                    Float mVotes;
+                    Float mAvg;
+                    Float fVotes;
+                    Float fAvg;
+
+                    //malesRating
+                    numberVotes = null;
+                    if (!row[23].isEmpty()){
+                        numberVotes = Float.parseFloat(row[23]);
+                    }
+                    averageRating = null;
+                    if (!row[24].isEmpty()){
+                        averageRating = Float.parseFloat(row[24]);
+                    }
+                    movieRating.setMalesRating(new Rating(averageRating, numberVotes));
+                    mVotes = numberVotes;
+                    mAvg = averageRating;
+
+                    //femalesRating
+                    numberVotes = null;
+                    if (!row[33].isEmpty()){
+                        numberVotes = Float.parseFloat(row[33]);
+                    }
+                    averageRating = null;
+                    if (!row[34].isEmpty()){
+                        averageRating = Float.parseFloat(row[34]);
+                    }
+                    movieRating.setFemalesRating(new Rating(averageRating, numberVotes));
+                    fVotes = numberVotes;
+                    fAvg = averageRating;
+
+                    //allGenders Rating
+                    if (mVotes == null) mVotes=0f;
+                    if (fVotes == null) fVotes=0f;
+                    if (mAvg == null) mAvg=0f;
+                    if (fAvg == null) fAvg=0f;
+                    numberVotes = mVotes+fVotes;
+                    averageRating = (mVotes*mAvg + fVotes*fAvg)/numberVotes;
+                    movieRating.setAllGendersRating(new Rating(averageRating, numberVotes));
+
+                    //top1000Rating
+                    numberVotes = null;
+                    if (!row[43].isEmpty()){
+                        numberVotes = Float.parseFloat(row[43]);
+                    }
+                    averageRating = null;
+                    if (!row[44].isEmpty()){
+                        averageRating = Float.parseFloat(row[44]);
+                    }
+                    movieRating.setTop1000Rating(new Rating(averageRating, numberVotes));
+
+                    //usRating
+                    numberVotes = null;
+                    if (!row[45].isEmpty()){
+                        numberVotes = Float.parseFloat(row[45]);
+                    }
+                    averageRating = null;
+                    if (!row[46].isEmpty()){
+                        averageRating = Float.parseFloat(row[46]);
+                    }
+                    movieRating.setUsRating(new Rating(averageRating, numberVotes));
+
+                    //nonUsRating
+                    numberVotes = null;
+                    if (!row[47].isEmpty()){
+                        numberVotes = Float.parseFloat(row[47]);
+                    }
+                    averageRating = null;
+                    if (!row[48].isEmpty()){
+                        averageRating = Float.parseFloat(row[48]);
+                    }
+                    movieRating.setNonUsRating(new Rating(averageRating, numberVotes));
+
                     /**
                      *    imdb_title_id,
                      *    weighted_average_vote,
                      *    total_votes,
                      *    mean_vote,
                      *    median_vote,
+                     *
+                     *
+                     *
                      *    votes_10,
                      *    votes_9,
                      *    votes_8,
@@ -411,16 +523,23 @@ public abstract class fileReader {
                      *    votes_3,
                      *    votes_2,
                      *    votes_1,
-                     *    allgenders_0age_avg_vote,
-                     *    allgenders_0age_votes,
+                     *
+                     *
+                     *
+                     *    allgenders_0age_avg_vote, row[15]
+                     *    allgenders_0age_votes,    row[16]
                      *    allgenders_18age_avg_vote,
                      *    allgenders_18age_votes,
                      *    allgenders_30age_avg_vote,
                      *    allgenders_30age_votes,
                      *    allgenders_45age_avg_vote,
                      *    allgenders_45age_votes,
-                     *    males_allages_avg_vote,
-                     *    males_allages_votes,
+                     *
+                     *
+                     *
+                     *    males_allages_avg_vote,   row[23]
+                     *    males_allages_votes,      row[24]
+                     *
                      *    males_0age_avg_vote,
                      *    males_0age_votes,
                      *    males_18age_avg_vote,
@@ -429,8 +548,12 @@ public abstract class fileReader {
                      *    males_30age_votes,
                      *    males_45age_avg_vote,
                      *    males_45age_votes,
-                     *    females_allages_avg_vote,
-                     *    females_allages_votes,
+                     *
+                     *
+                     *
+                     *    females_allages_avg_vote, row[33]
+                     *    females_allages_votes,    row[34]
+                     *
                      *    females_0age_avg_vote,
                      *    females_0age_votes,
                      *    females_18age_avg_vote,
@@ -439,19 +562,19 @@ public abstract class fileReader {
                      *    females_30age_votes,
                      *    females_45age_avg_vote,
                      *    females_45age_votes,
-                     *    top1000_voters_rating,
-                     *    top1000_voters_votes,
-                     *    us_voters_rating,
-                     *    us_voters_votes,
-                     *    non_us_voters_rating,
-                     *    non_us_voters_votes
+                     *
+                     *
+                     *    top1000_voters_rating,    row[43]
+                     *    top1000_voters_votes,     row[44]
+                     *
+                     *
+                     *    us_voters_rating,         row[45]
+                     *    us_voters_votes,          row[46]
+                     *
+                     *
+                     *    non_us_voters_rating,     row[47]
+                     *    non_us_voters_votes       row[48]
                      */
-
-                    //for (int i = 0; i < row.length; i++){
-                    //    System.out.printf("%-40s","---"+row[i]);
-                    //}
-                    //System.out.println(" ");
-                    //------------
 
                     movie.setRating(movieRating);
 
@@ -480,9 +603,9 @@ public abstract class fileReader {
         String line;
         String[] row = new String[6];
         int column;
-        final String titlePrincipalsPath = "dataset\\IMDb title_principals.csv";
+        final String titlePrincipalsPath = "dataset\\IMDb title_principals2.csv";
 
-        HashTable<Long, MovieCastMember> hashToReturn = new ClosedHashTable<>(79,0.5f);
+        HashTable<Long, MovieCastMember> hashToReturn = new ClosedHashTable<>(1670954,0.5f);
 
         try{
             reader = new BufferedReader(new FileReader(titlePrincipalsPath));
@@ -534,13 +657,17 @@ public abstract class fileReader {
 
                     MovieCastMember movieCastMemberToAdd = new MovieCastMember(movie, ordering, castMember, row[3], row[4], characters);
 
-                    hashToReturn.put(movieCastMemberToAdd.longHashCode(), movieCastMemberToAdd);
+                    try{
+                        hashToReturn.put(movieCastMemberToAdd.longHashCode(), movieCastMemberToAdd);
+                    } catch (KeyAlreadyExistsException e){
+                        //ignore
+                    }
 
                     column = 0;
                     inQuotes = false;
                 }
             }
-        } catch (IOException | KeyNotExistsException | KeyAlreadyExistsException e){
+        } catch (IOException | KeyNotExistsException e){
             e.printStackTrace();
         } finally {
             try{
@@ -552,4 +679,5 @@ public abstract class fileReader {
         }
         return hashToReturn;
     }
+
 }
