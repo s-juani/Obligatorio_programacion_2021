@@ -9,12 +9,12 @@ public class HeapImpl<T extends Comparable<T>,V> implements Heap<T,V> {
     private String tipo;    //max o min
 
     public HeapImpl(int size, String tipo) {
-        array = (HeapNode<T,V>[]) new Object[size];
+        array = new HeapNode[size];
         count = 0;
         this.tipo = tipo;
     }
     public HeapImpl(String tipo) {
-        array = (HeapNode<T,V>[]) new Object[15];
+        array = new HeapNode[15];
         count=0;
         this.tipo=tipo;
     }

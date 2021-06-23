@@ -1,9 +1,7 @@
-package reportes;
+package reportes.sort;
 
 import TADs.arraylist.MyArrayList;
 import TADs.arraylist.MyArrayListImpl;
-import TADs.heap.*;
-import TADs.heap.exceptions.*;
 
 import java.util.ArrayList;
 

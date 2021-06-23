@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Hashtable;
 
 /**
  * Esto es total y completamente en modalidad de prueba, esta clase no es definitiva y
@@ -594,7 +595,9 @@ public abstract class fileReader {
 
     }
 
-    public static HashTable<Long, MovieCastMember> readTitlePrincipals(HashTable<Integer, Movie> movieHash, HashTable<Integer, CastMember> memberHash){
+    public static HashTable<Long, MovieCastMember> readTitlePrincipals(HashTable<Integer, Movie> movieHash,
+                                                                       HashTable<Integer, CastMember> memberHash,
+                                                                       HashTable<Integer, Lista<MovieCastMember>> castMemberIndex){
 
         BufferedReader reader = null;
         String line;
@@ -602,7 +605,7 @@ public abstract class fileReader {
         int column;
         final String titlePrincipalsPath = "dataset\\IMDb title_principals2.csv";
 
-        HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(595411,0.5f);
+        //HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(595411,0.5f);
         HashTable<Integer, Lista<MovieCastMember>> movieIndex = new ClosedHashTable<>(171711,0.5f);
 
         HashTable<Long, MovieCastMember> hashToReturn = new ClosedHashTable<>(1670954,0.5f);

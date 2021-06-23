@@ -7,6 +7,7 @@ import TADs.LinkedList.exceptions.EmptyQueueException;
 import TADs.LinkedList.interfaces.Lista;
 import TADs.heap.exceptions.EmptyHeapException;
 import TADs.heap.exceptions.HeapOverflowException;
+import com.sun.tools.javac.Main;
 import entities.CastMember;
 import entities.CauseOfDeath;
 import entities.Movie;
@@ -24,8 +25,9 @@ public class fileReaderTest {
     public void testFlujoNormal(){
         HashTable<Integer, CastMember> castMemberHash = fileReader.readCastMember();
         HashTable<Integer, Movie> movieHash = fileReader.readMovie();
+        HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(59,0.5f);
         fileReader.readMovieRating(movieHash);
-        fileReader.readTitlePrincipals(movieHash,castMemberHash);
+        fileReader.readTitlePrincipals(movieHash,castMemberHash, castMemberIndex);
     }
 
     @Test
@@ -52,10 +54,9 @@ public class fileReaderTest {
     public void testMovieCastMember() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, EmptyQueueException, KeyAlreadyExistsException {
         HashTable<Integer, CastMember> castMemberHash = fileReader.readCastMember();
         HashTable<Integer, Movie> castMovie = fileReader.readMovie();
-        HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(castMovie,castMemberHash);
-        Lista<MovieCastMember> newList = MovieCastMember.getIterator();
-        HashTable<Integer, CauseOfDeath> causeOfDeathHashTable = CastMember.getCauseOfDeathHash();
-        //Main.showReporte1();
+        HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(59,0.5f);
+        HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(castMovie,castMemberHash,castMemberIndex);
+        //Reportes.showReporte1(castMemberIndex);
     }
 
 

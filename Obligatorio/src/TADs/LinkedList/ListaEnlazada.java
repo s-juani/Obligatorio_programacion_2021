@@ -9,11 +9,23 @@ public class ListaEnlazada<T> implements Lista<T>, Stack<T>, Queue<T>, DoubleQue
     private int count;
     private Nodo<T> head;
     private Nodo<T> tail;
+    private Nodo<T> it;
+
     public ListaEnlazada() {
         count = 0;
     }
 
-    public Nodo<T> getHead(){return head;}
+    public void iteratorReset(){
+        it = head;
+    }
+    public T iteratorNext(){
+        Nodo<T> newIt = it;
+        if (newIt!=null){
+            it = it.getNext();
+            return newIt.getValue();
+        }
+        else return null;
+    }
     public int size() {
         return count;
     }
@@ -65,7 +77,10 @@ public class ListaEnlazada<T> implements Lista<T>, Stack<T>, Queue<T>, DoubleQue
             }
         }
     }
-
+    public T getFirst(){
+        if (head!=null) return head.getValue();
+        else return null;
+    }
     public T get(int posicion) {
         T getItem = null;
         if (posicion >= 0 && posicion < this.count) {

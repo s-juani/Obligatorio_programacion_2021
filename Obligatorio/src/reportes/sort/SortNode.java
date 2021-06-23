@@ -1,4 +1,4 @@
-package reportes;
+package reportes.sort;
 
 public class SortNode<K extends Comparable<K>,V> {
     private K key;

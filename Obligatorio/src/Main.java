@@ -5,6 +5,7 @@ import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
 import TADs.ClosedHash.exceptions.KeyNotExistsException;
 import TADs.DoubleHash.DoubleHashTable;
 import TADs.LinkedList.exceptions.EmptyQueueException;
+import TADs.LinkedList.interfaces.Lista;
 import TADs.heap.exceptions.EmptyHeapException;
 import TADs.heap.exceptions.HeapOverflowException;
 import entities.*;
@@ -19,9 +20,10 @@ public class Main{
     public static HashTable<Integer, CastMember> castMemberHash;
     public static HashTable<Integer, Movie> movieHash;
     public static HashTable<Long, MovieCastMember> movieCastMemberHash;
+    //public static HashTable<Integer, Lista<MovieCastMember>> castMemberIndex;
+    public static HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(595411,0.5f);
+    public static HashTable<Integer, Lista<MovieCastMember>> movieIndex;
 
-    public static HashTable<Integer, Rating> ratingHash;
-    public static HashTable<Integer, MovieRating> movieRatingHash = new ClosedHashTable<>(); //revisar si usar otra  TAD
 
     //especificar tamaño de las tablas en los constructores
 
@@ -77,7 +79,7 @@ public class Main{
 
     public static void showReporte1() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
 
-        Object[][] top5 = Reportes.reporte1();
+        Object[][] top5 = Reportes.reporte1(castMemberIndex);
         for (Object[] t : top5){
             CastMember member = (CastMember) t[1];
             int apariciones = (int) t[0];
@@ -145,7 +147,7 @@ public class Main{
 
         castMemberHash = fileReader.readCastMember(); //carga causeOfDeathHash y castMemberHash
         movieHash = fileReader.readMovie();  //carga movieHash y ratingHash
-        movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash);
+        movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash,castMemberIndex);
         fileReader.readMovieRating(movieHash);
 
         long finishTime = System.nanoTime();

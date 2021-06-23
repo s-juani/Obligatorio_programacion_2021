@@ -3,13 +3,8 @@ package reportes;
 import TADs.ClosedHash.HashTable;
 import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
 import TADs.ClosedHash.exceptions.KeyNotExistsException;
-import TADs.DoubleHash.DoubleHashTable;
-import TADs.LinkedList.ListaEnlazada;
-import TADs.LinkedList.Nodo;
-import TADs.LinkedList.PriorityNode;
 import TADs.LinkedList.exceptions.EmptyQueueException;
-import TADs.LinkedList.interfaces.ListWithPriority;
-import TADs.LinkedList.interfaces.PriorityQueue;
+import TADs.LinkedList.interfaces.Lista;
 import TADs.arraylist.MyArrayListImpl;
 import TADs.arraylist.MyArrayList;
 import TADs.heap.Heap;
@@ -20,16 +15,74 @@ import entities.CastMember;
 import entities.CauseOfDeath;
 import entities.Movie;
 import entities.MovieCastMember;
-
-import java.awt.event.FocusEvent;
+import reportes.sort.Sort;
+import reportes.sort.SortNode;
 
 
 public abstract class Reportes {
 
     // top 5 de actores/actrices segun cantidad de apariciones en peliculas
-    public static Object[][] reporte1() throws KeyNotExistsException, KeyAlreadyExistsException, HeapOverflowException, EmptyHeapException, EmptyQueueException {
-
+    public static Object[][] reporte1(HashTable<Integer,Lista<MovieCastMember>> castMemberIndex) throws KeyNotExistsException, KeyAlreadyExistsException, HeapOverflowException, EmptyHeapException, EmptyQueueException {
         Object[][] top5 = new Object[5][2];
+        Heap<Integer, CastMember> topHeap = new HeapImpl<>(5,"min");
+
+        Lista<MovieCastMember> movieList;
+        CastMember castMember;
+        MovieCastMember movieCastMember;
+        castMemberIndex.iteratorReset();
+        int apariciones;
+        while ((movieList = castMemberIndex.iteratorNext()) != null){
+            apariciones = 0;
+            movieList.iteratorReset();
+            movieCastMember = movieList.iteratorNext();
+            castMember = movieCastMember.getCastMember();
+            while ((movieCastMember) != null){
+                if (movieCastMember.getCategory().equals("actor") || movieCastMember.getCategory().equals("actress")){
+                    apariciones ++;
+                }
+                movieCastMember = movieList.iteratorNext();
+            }
+            if (apariciones!=0){
+                if (topHeap.size()==5) {
+                    if (((Integer) topHeap.top()[0]) < apariciones) {
+                        topHeap.delete();
+                        topHeap.add(apariciones, castMember);
+                    }
+                } else {
+                    topHeap.add(apariciones, castMember);
+                }
+            }
+        }
+
+        for (int p = 4; p >= 0; p--){
+            Object[] element = topHeap.remove();
+            top5[p] = new Object[]{element[0],element[1]};
+        }
+
+
+
+        /*
+        for (Nodo<CastMember> member = castMemberIndex.iteratorNext(); member.getNext()!=null; member = member.getNext()){
+            if (member.getValue().getMovieRoles().find("actor") ||
+                    member.getValue().getMovieRoles().find("actress")) { // FIXME seleccionar solo las apariciones como actores
+                int apariciones = movieCastMemberHash.columnSize(member.hashCode());
+                if (i < 5) {
+                    topHeap.add(apariciones, member.getValue());
+                    i++;
+                } else if (((Integer) topHeap.top()[0]) < apariciones) {
+                    topHeap.delete();
+                    topHeap.add(apariciones, member.getValue());
+                }
+            }
+        }
+
+         */
+
+
+
+        return top5;
+
+        /*
         ListWithPriority<CastMember> topList = new ListaEnlazada<>();
         for (Nodo<MovieCastMember> movieCastMember = MovieCastMember.getIterator().getHead(); movieCastMember!=null; movieCastMember=movieCastMember.getNext()){
             CastMember member = movieCastMember.getValue().getCastMember();
@@ -48,27 +101,10 @@ public abstract class Reportes {
         for (int p=0; p<5; p++){
             top5[p] = new Object[]{topList.getPriorityHead().getPriority(),topList.dequeue()};
         }   // se extraen los 5 primeros con sus respectivas cantidades de apariciones
+        *
+        * */
 
-        return top5;
-
-        /*
-        Heap<Integer, CastMember> topHeap = new HeapImpl<>(5,"min");
-        for (Nodo<CastMember> member = CastMember.iterator.getHead(); member.getNext()!=null; member = member.getNext()){
-            if (member.getValue().getMovieRoles().find("actor") ||
-                    member.getValue().getMovieRoles().find("actress")) { // FIXME seleccionar solo las apariciones como actores
-                int apariciones = movieCastMemberHash.columnSize(member.hashCode());
-                if (i < 5) {
-                    topHeap.add(apariciones, member.getValue());
-                    i++;
-                } else if (((Integer) topHeap.top()[0]) < apariciones) {
-                    topHeap.delete();
-                    topHeap.add(apariciones, member.getValue());
-                }
-            }
-        }
-         */
     }
-
 
 
 
