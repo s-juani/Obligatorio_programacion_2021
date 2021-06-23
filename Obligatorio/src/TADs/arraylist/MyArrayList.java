@@ -14,4 +14,6 @@ public interface MyArrayList<K> {
     public int getLenght();
 
     public void print();
+
+    public boolean contains(K value);
 }

@@ -4,6 +4,7 @@ public class ClosedHashNode<K,V>{
 
     private K key;
     private V value;
+
     private boolean deleted = false;
 
     public ClosedHashNode(K key, V value) {

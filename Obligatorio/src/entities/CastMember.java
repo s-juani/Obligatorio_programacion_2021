@@ -6,9 +6,6 @@ import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
 import TADs.ClosedHash.exceptions.KeyNotExistsException;
 import TADs.LinkedList.ListaEnlazada;
 import TADs.LinkedList.interfaces.Lista;
-import TADs.hash.MyClosedHashImpl;
-import TADs.hash.MyHash;
-import TADs.hash.exceptions.invalidHashcodeMethod;
 
 import java.util.Date;
 
@@ -45,7 +42,7 @@ public class CastMember {
     private final Integer divorces;
     private final Integer spousesWithChildren;
     private final Integer children;
-    private Lista<String> movieRoles = new ListaEnlazada<>();
+    private Lista<String> ocupation = new ListaEnlazada<>();
 
     public CastMember(String imdbNameId, String name, String birthName, Integer height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String[] reasonOfDeath, String spousesString, Integer spouses, Integer divorces, Integer spousesWithChildren, Integer children) throws KeyNotExistsException, KeyAlreadyExistsException {
         this.imdbNameId = imdbNameId;       //0
@@ -110,8 +107,15 @@ public class CastMember {
     public String getDeathCity() {
         return deathCity;
     }
-    public CauseOfDeath[] getReasonOfDeath() {
-        return reasonOfDeath;
+    public CauseOfDeath getReasonOfDeath(int position) {
+        if (position >= reasonOfDeath.length){
+            return null;
+        } else {
+            return reasonOfDeath[position];
+        }
+    }
+    public Integer getReasonOfDeathLenght(){
+        return reasonOfDeath.length;
     }
     public String getSpousesString() {
         return spousesString;
@@ -129,12 +133,12 @@ public class CastMember {
         return children;
     }
 
-    public Lista<String> getMovieRoles() {
-        return movieRoles;
+    public Lista<String> getOcupation() {
+        return ocupation;
     }
 
-    public void setMovieRoles(String rol) {
-        movieRoles.add(rol);
+    public void setOcupation(String rol) {
+        if (!ocupation.find(rol)) ocupation.add(rol);
     }
 
     public boolean equals(Object o){

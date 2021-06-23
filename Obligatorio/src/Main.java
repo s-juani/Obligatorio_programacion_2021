@@ -11,6 +11,7 @@ import entities.*;
 import filereader.*;
 import reportes.Reportes;
 
+import javax.sound.midi.Soundbank;
 import java.util.Scanner;
 
 public class Main{
@@ -87,13 +88,20 @@ public class Main{
         menuReportes();
     }
     public static void showReporte2() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
-        Object[] top5 = Reportes.reporte2(castMemberHash);
-        for (Object[] t : (Object[][]) top5){
-            System.out.println("Causa de muerte: ");
-            System.out.println("Cantidad de personas: " + "\n");
+        String[][] top5 = Reportes.reporte2(castMemberHash);
 
+        long startTime = System.nanoTime();
+
+        for (int i=0; i<5; i++){
+            System.out.println("Causa de muerte: " + top5[i][0]);
+            System.out.println("Cantidad de personas: " + top5[i][1]);
         }
-        System.out.println("Tiempo de ejecución de la consulta: " + "\n"); // tiempo de ejecucion
+
+        long finishTime = System.nanoTime();
+        finishTime -= startTime;
+        finishTime /= 1000000;
+
+        System.out.println("Tiempo de ejecución de la consulta: " + finishTime + "ms"); // tiempo de ejecucion
         menuReportes();
     }
     public static void showReporte3() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {

@@ -10,6 +10,8 @@ import TADs.LinkedList.PriorityNode;
 import TADs.LinkedList.exceptions.EmptyQueueException;
 import TADs.LinkedList.interfaces.ListWithPriority;
 import TADs.LinkedList.interfaces.PriorityQueue;
+import TADs.arraylist.MyArrayListImpl;
+import TADs.arraylist.MyArrayList;
 import TADs.heap.Heap;
 import TADs.heap.HeapImpl;
 import TADs.heap.exceptions.EmptyHeapException;
@@ -64,31 +66,65 @@ public abstract class Reportes {
          */
     }
 
-    //prueba reporte1
-    /*
-    public static void showReporte1() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
-        Object[][] top5 = Reportes.reporte1();
-        for (Object[] t : top5){
-            CastMember member = (CastMember) t[1];
-            int apariciones = (int) t[0];
-            System.out.println("Nombre actor/actriz: " + member.getName());
-            System.out.println("Cantidad de apariciones: " + apariciones + "\n");
 
-        }
-        System.out.println("Tiempo de ejecución de la consulta: "); // tiempo de ejecucion
-    }
 
-     */
 
     // top 5 causas de muerte de productores y directores nacidos en Italia, USA, Francia, UK
-    // (fallecidos en esos paises tambien?)
-    public static Object[] reporte2(HashTable<Integer, CastMember> castMemberHash){
-        Object[] top5 = new Object[5];
-        // iterar castMember en un hash indexado por pais de nacimiento (listas por paises)
-        // filtrar por roles.find(producer,director) (y pais de muerte?)
-        // ir agregando las causas a una lista enlazada: add.{causa, cantidad}  (priorityQueue puede servir)
-        // cantidad ++ si la causa ya existe en la lista
-        // llenar top5 con las causas con mas cantidad de muertes
+    public static String[][] reporte2(HashTable<Integer, CastMember> castMemberHash){
+        String[][] top5 = new String[5][2];
+
+        castMemberHash.iteratorReset();
+        CastMember castMember;
+        String country;
+
+        MyArrayList<Object[]> list = new MyArrayListImpl<>();
+
+        while ((castMember = castMemberHash.iteratorNext())!=null){
+            country = castMember.getBirthCountry();
+            if (country.contains("USA") || country.contains("UK") || country.contains("France") || country.contains("Italy")) {
+                if (castMember.getOcupation().find("producer") || castMember.getOcupation().find("director")){
+
+                    //agregar causa de muerte al arrayList o incrementar su cantidad si ya estaba
+
+                    for (int i=0; i<castMember.getReasonOfDeathLenght(); i++){
+                        boolean hasCauseOfDeath = false;
+                        for (int j=0; j<list.getLenght(); j++){
+                            if (list.get(j).equals(castMember.getReasonOfDeath(i))){
+                                hasCauseOfDeath = true;
+                            }
+                        }
+                        if (!hasCauseOfDeath){
+                            Object[] temp = new Object[2];
+                            temp[0] = 1;
+                            temp[1] = castMember.getReasonOfDeath(i);
+                        }
+                    }
+
+
+                    /*Object[] coso = new Object[2];
+                    coso[0] = 3;
+                    coso[1] = "abcd";
+                    list.add(coso);
+                    Integer x = (int) list.get(0)[0];*/
+
+                }
+            }
+        }
+
+
+        /**
+         * Iterar castMemberHash, checkear si ocupacion.contains(productor) >> checkear si birthCountry.contains(pais) >>
+         * >> agregar aparicion de causeOfDeath
+         * >> cargar en un ArrayList
+         * >> ordenar con QuickSort
+         * >> extraer los primeros 5
+         */
+
+
+
+
+
+
 
         return top5;
     }

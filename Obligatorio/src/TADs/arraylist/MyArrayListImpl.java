@@ -5,6 +5,10 @@ public class MyArrayListImpl<K> implements MyArrayList<K> {
     private K[] list;
     private int size = 0;
 
+    public MyArrayListImpl() {
+        list = (K[]) new Object[10];
+    }
+
     public MyArrayListImpl(int size) {
         list = (K[]) new Object[size];
     }
@@ -58,5 +62,13 @@ public class MyArrayListImpl<K> implements MyArrayList<K> {
         for (int i=0; i<size;i++){
             System.out.println(list[i]);
         }
+    }
+
+    @Override
+    public boolean contains(K value){
+        for (K k : list) {
+            if (k == value) return true;
+        }
+        return false;
     }
 }

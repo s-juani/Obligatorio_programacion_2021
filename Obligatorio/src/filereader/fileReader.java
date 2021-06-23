@@ -2,6 +2,8 @@ package filereader;
 
 import TADs.ClosedHash.*;
 import TADs.ClosedHash.exceptions.*;
+import TADs.LinkedList.ListaEnlazada;
+import TADs.LinkedList.interfaces.Lista;
 import TADs.arraylist.*;
 import entities.*;
 
@@ -75,19 +77,14 @@ public abstract class fileReader {
                     if (!row[16].equals("")) children = Integer.parseInt(row[16]);
 
                     //birth_location a lista
-                    String[] birth = new String[3];
+                    String[] birth = new String[2];
                     if (!row[7].equals("")){
                         row[7] = row[7].substring(1,row[7].length()-1);
                         String[] birthArray = row[7].split(",");
-                        if (birthArray.length>3) {
+                        if (birthArray.length>=2) {
                             birth[0]=birthArray[0]; //city
                             birth[1]=birthArray[1]; //state
-                            for (int i=2; i<birthArray.length; i++) birth[2]=birth[2]+birthArray[i]; //country
-                        } else if (birthArray.length==3) birth=birthArray;
-                        else if (birthArray.length==2){
-                            birth[0]=birthArray[0]; //city
-                            birth[2]=birthArray[1]; //country
-                        } else if (birthArray.length==1) birth[2]=birthArray[0]; //country
+                        } else if (birthArray.length==1) birth[1]=birthArray[0];
                     }
 
                     //death_location a lista
@@ -153,7 +150,7 @@ public abstract class fileReader {
                                                             birthDate,      // row[6] buscar como castear a Date
                                                             birth[0],       //row[7] array con birth city, state, country
                                                             birth[1],
-                                                            birth[2],
+                                                            row[7],
                                                             deathDate,      //row[9] buscar como castear a Date
                                                             death[0],       //row[10] array con death city, state, country
                                                             death[1],
@@ -605,6 +602,14 @@ public abstract class fileReader {
         int column;
         final String titlePrincipalsPath = "dataset\\IMDb title_principals2.csv";
 
+        HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(595411,0.5f);
+        /*
+
+
+
+
+         */
+
         HashTable<Long, MovieCastMember> hashToReturn = new ClosedHashTable<>(1670954,0.5f);
 
         try{
@@ -653,15 +658,28 @@ public abstract class fileReader {
                     Integer castMemberHashCode = Integer.parseInt(row[2].substring(2));
                     CastMember castMember = memberHash.get(castMemberHashCode);
 
-                    castMember.setMovieRoles(row[3]);
+                    castMember.setOcupation(row[3]);
 
                     MovieCastMember movieCastMemberToAdd = new MovieCastMember(movie, ordering, castMember, row[3], row[4], characters);
 
+                    try {
+                        castMemberIndex.get(castMember.hashCode()).add(movieCastMemberToAdd);
+                    } catch (KeyNotExistsException e) {
+                        try {
+                            castMemberIndex.put(castMember.hashCode(), new ListaEnlazada<>());
+                            castMemberIndex.get(castMember.hashCode()).add(movieCastMemberToAdd);
+                        } catch (KeyAlreadyExistsException ignored) {}
+                    }
+                    /*
+                    // start modify
                     try{
                         hashToReturn.put(movieCastMemberToAdd.longHashCode(), movieCastMemberToAdd);
                     } catch (KeyAlreadyExistsException e){
                         //ignore
                     }
+                    // finish modify
+
+                     */
 
                     column = 0;
                     inQuotes = false;

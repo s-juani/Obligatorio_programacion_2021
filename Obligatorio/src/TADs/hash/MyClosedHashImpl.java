@@ -13,7 +13,7 @@ public class MyClosedHashImpl<K,V> implements MyHash<K,V> {
     private static final int DEFAULT_SIZE = 10;
     private double loadFactor;
     private int maxSize;
-    private int type;   // 0 = linear; 1 = direct
+    private int type;
 
     private ClosedHashNode[] hashTable;
     private int size;

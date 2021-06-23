@@ -9,6 +9,8 @@ public interface HashTable<K,V> {
     int size();
     int getPosition(K key) throws KeyNotExistsException;
     int tableSize();
+    V iteratorNext();
+    void iteratorReset();
 
 }
 

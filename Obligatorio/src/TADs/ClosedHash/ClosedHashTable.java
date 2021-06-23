@@ -2,12 +2,29 @@ package TADs.ClosedHash;
 import TADs.ClosedHash.exceptions.*;
 
 public class ClosedHashTable<K,V> implements HashTable<K,V> {
+
     private HashTableNode<K,V>[] table;
+
     private int count;
     private static final int DEFAULT_INITIAL_SIZE = 11;
     private static final float DEFAULT_LOAD_FACTOR = 0.5f;
     private final float loadFactor;
     private final String resolucionColision;
+    private int it;
+
+    public V iteratorNext() {
+        do {
+            it++;
+            if (!(it < table.length)) {
+                return null;
+            }
+        } while (table[it] == null);
+        return table[it].getValue();
+    }
+
+    public void iteratorReset() {
+        it = -1;
+    }
 
     public ClosedHashTable() {
         this(DEFAULT_INITIAL_SIZE,DEFAULT_LOAD_FACTOR);
@@ -17,6 +34,7 @@ public class ClosedHashTable<K,V> implements HashTable<K,V> {
         this.loadFactor = loadFactor;
         count = 0;
         resolucionColision = "lineal";
+        it = -1;
     }
     public ClosedHashTable(int initialSize, float loadFactor, String resolucionColision) {
         table = new HashTableNode[initialSize];
@@ -137,6 +155,7 @@ public class ClosedHashTable<K,V> implements HashTable<K,V> {
         if (resolucionColision.equals("cuadratica")) return (position + attempt*attempt) % table.length;
         return (position + attempt) % table.length;
     }
+
 
 }
 
