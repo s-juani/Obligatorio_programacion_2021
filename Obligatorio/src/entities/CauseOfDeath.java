@@ -11,4 +11,7 @@ public class CauseOfDeath {
         return (this.name.equals(s));
     }
 
+    public String getName() {
+        return name;
+    }
 }

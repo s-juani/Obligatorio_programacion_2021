@@ -12,7 +12,6 @@ import java.util.Date;
 public class CastMember {
 
     private static Lista<CastMember> iterator = new ListaEnlazada<>(); // new: para iterar sobre las instancias de CastMember
-
     public static Lista<CastMember> getIterator() {
         return iterator;
     }
@@ -36,7 +35,7 @@ public class CastMember {
     private final String deathCity;
     private final String deathState;
     private final String deathCountry;
-    private final CauseOfDeath[] reasonOfDeath;  // FIXME implementar un checkeo de si ya se registro dicha reasonOfDeath
+    private final CauseOfDeath[] reasonOfDeath;
     private final String spousesString;
     private final Integer spouses;
     private final Integer divorces;

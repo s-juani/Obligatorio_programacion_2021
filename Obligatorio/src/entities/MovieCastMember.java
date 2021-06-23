@@ -6,7 +6,6 @@ import TADs.LinkedList.interfaces.Lista;
 public class MovieCastMember {
 
     private static Lista<MovieCastMember> iterator = new ListaEnlazada<>();
-
     public static Lista<MovieCastMember> getIterator() {
         return iterator;
     }
@@ -29,7 +28,7 @@ public class MovieCastMember {
     }
 
     public long longHashCode(){
-        long temp = (long) movie.hashCode()*10000000L + castMember.hashCode();
+        long temp = (long) movie.hashCode()*10000000L + (long) castMember.hashCode();
         if (temp >= 0) return temp;
         else return -temp;
     }

@@ -603,12 +603,7 @@ public abstract class fileReader {
         final String titlePrincipalsPath = "dataset\\IMDb title_principals2.csv";
 
         HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(595411,0.5f);
-        /*
-
-
-
-
-         */
+        HashTable<Integer, Lista<MovieCastMember>> movieIndex = new ClosedHashTable<>(171711,0.5f);
 
         HashTable<Long, MovieCastMember> hashToReturn = new ClosedHashTable<>(1670954,0.5f);
 
@@ -670,6 +665,17 @@ public abstract class fileReader {
                             castMemberIndex.get(castMember.hashCode()).add(movieCastMemberToAdd);
                         } catch (KeyAlreadyExistsException ignored) {}
                     }
+
+                    try {
+                        movieIndex.get(movie.hashCode()).add(movieCastMemberToAdd);
+                    } catch (KeyNotExistsException e) {
+                        try {
+                            movieIndex.put(movie.hashCode(), new ListaEnlazada<>());
+                            movieIndex.get(movie.hashCode()).add(movieCastMemberToAdd);
+                        } catch (KeyAlreadyExistsException ignored) {}
+                    }
+
+
                     /*
                     // start modify
                     try{

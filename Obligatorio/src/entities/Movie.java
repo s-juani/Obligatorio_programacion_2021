@@ -10,7 +10,6 @@ import java.util.Date;
 public class Movie {
 
    private static Lista<Movie> iterator = new ListaEnlazada<>();
-
    public static Lista<Movie> getIterator() {
       return iterator;
    }
@@ -28,7 +27,6 @@ public class Movie {
    private String[] writer;
    private String productionCompany;
    private String[] actors;
-   //private MyArrayList<String> actors = new MyArrayListImpl<>(5);
    private String description;
    private Float avgVote;
    private Integer votes;

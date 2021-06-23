@@ -17,8 +17,11 @@ import TADs.heap.HeapImpl;
 import TADs.heap.exceptions.EmptyHeapException;
 import TADs.heap.exceptions.HeapOverflowException;
 import entities.CastMember;
+import entities.CauseOfDeath;
 import entities.Movie;
 import entities.MovieCastMember;
+
+import java.awt.event.FocusEvent;
 
 
 public abstract class Reportes {
@@ -77,7 +80,7 @@ public abstract class Reportes {
         CastMember castMember;
         String country;
 
-        MyArrayList<Object[]> list = new MyArrayListImpl<>();
+        MyArrayList<SortNode<Integer,CauseOfDeath>> list = new MyArrayListImpl<>();
 
         while ((castMember = castMemberHash.iteratorNext())!=null){
             country = castMember.getBirthCountry();
@@ -89,16 +92,19 @@ public abstract class Reportes {
                     for (int i=0; i<castMember.getReasonOfDeathLenght(); i++){
                         boolean hasCauseOfDeath = false;
                         for (int j=0; j<list.getLenght(); j++){
-                            if (list.get(j).equals(castMember.getReasonOfDeath(i))){
+                            if (list.get(j).getValue().equals(castMember.getReasonOfDeath(i))){
+                                list.get(j).setKey(list.get(j).getKey() + 1);
                                 hasCauseOfDeath = true;
+                                break; // verificar que no corte el loop for de la i
                             }
                         }
                         if (!hasCauseOfDeath){
-                            Object[] temp = new Object[2];
-                            temp[0] = 1;
-                            temp[1] = castMember.getReasonOfDeath(i);
+                            SortNode<Integer,CauseOfDeath> temp = new SortNode<>(1, castMember.getReasonOfDeath(i));
+                            list.add(temp);
                         }
                     }
+
+
 
 
                     /*Object[] coso = new Object[2];
@@ -109,6 +115,15 @@ public abstract class Reportes {
 
                 }
             }
+        }
+        Sort<Integer,CauseOfDeath> sort = new Sort<>();
+        sort.QuickSort(list);
+
+
+        for (int i=0; i<5; i++){
+            SortNode<Integer, CauseOfDeath> temp = list.get(i);
+            top5[i][0] = String.valueOf(temp.getKey());
+            top5[i][1] = temp.getValue().getName();
         }
 
 
