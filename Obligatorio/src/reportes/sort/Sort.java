@@ -2,6 +2,7 @@ package reportes.sort;
 
 import TADs.arraylist.MyArrayList;
 import TADs.arraylist.MyArrayListImpl;
+import entities.CauseOfDeath;
 
 import java.util.ArrayList;
 
@@ -199,6 +200,33 @@ public class Sort<K extends Comparable<K>, V> {
             }
 
         }
+    }
+
+    public void quickSort(MyArrayList<SortNode<Integer,V>> list, int start, int end){
+        if (start < end){
+            int partitionIndex = partition(list, start, end);
+            quickSort(list, start, partitionIndex-1);
+            quickSort(list, partitionIndex+1, end);
+        }
+    }
+
+    private int partition(MyArrayList<SortNode<Integer,V>> list, int start, int end){
+        int pivot = list.get(end).getKey();
+
+        int i = start-1;
+        for (int j = start; j<end; j++){
+            if (list.get(j).getKey() >= pivot){
+                i++;
+
+                SortNode swapNode = list.get(i);
+                list.setElement(i, list.get(j));
+                list.setElement(j, swapNode);
+            }
+        }
+        SortNode swapNode = list.get(i+1);
+        list.setElement(i, list.get(end));
+        list.setElement(end, swapNode);
+        return i+1;
     }
 
     public void QuickSort(MyArrayList<SortNode<K, V>> lista){

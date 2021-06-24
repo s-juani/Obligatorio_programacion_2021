@@ -53,10 +53,13 @@ public class fileReaderTest {
     @Test
     public void testMovieCastMember() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, EmptyQueueException, KeyAlreadyExistsException {
         HashTable<Integer, CastMember> castMemberHash = fileReader.readCastMember();
-        HashTable<Integer, Movie> castMovie = fileReader.readMovie();
+        HashTable<Integer, Movie> movieHash = fileReader.readMovie();
         HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(59,0.5f);
-        HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(castMovie,castMemberHash,castMemberIndex);
+        HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash,castMemberIndex);
         //Reportes.showReporte1(castMemberIndex);
+
+
+
     }
 
 

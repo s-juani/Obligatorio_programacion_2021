@@ -3,7 +3,6 @@ import TADs.ClosedHash.ClosedHashTable;
 import TADs.ClosedHash.HashTable;
 import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
 import TADs.ClosedHash.exceptions.KeyNotExistsException;
-import TADs.DoubleHash.DoubleHashTable;
 import TADs.LinkedList.exceptions.EmptyQueueException;
 import TADs.LinkedList.interfaces.Lista;
 import TADs.heap.exceptions.EmptyHeapException;
@@ -12,15 +11,15 @@ import entities.*;
 import filereader.*;
 import reportes.Reportes;
 
-import javax.sound.midi.Soundbank;
+
 import java.util.Scanner;
 
 public class Main{
 
     public static HashTable<Integer, CastMember> castMemberHash;
     public static HashTable<Integer, Movie> movieHash;
+    public static HashTable<Integer, Lista<Movie>> movieYearIndex;
     public static HashTable<Long, MovieCastMember> movieCastMemberHash;
-    //public static HashTable<Integer, Lista<MovieCastMember>> castMemberIndex;
     public static HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(595411,0.5f);
     public static HashTable<Integer, Lista<MovieCastMember>> movieIndex;
 
@@ -95,19 +94,19 @@ public class Main{
         long startTime = System.nanoTime();
 
         for (int i=0; i<5; i++){
-            System.out.println("Causa de muerte: " + top5[i][0]);
-            System.out.println("Cantidad de personas: " + top5[i][1]);
+            System.out.println("Causa de muerte: " + top5[i][1]);
+            System.out.println("Cantidad de personas: " + top5[i][0] + "\n");
         }
 
         long finishTime = System.nanoTime();
         finishTime -= startTime;
         finishTime /= 1000000;
 
-        System.out.println("Tiempo de ejecución de la consulta: " + finishTime + "ms"); // tiempo de ejecucion
+        System.out.println("Tiempo de ejecución de la consulta: " + finishTime + "ms\n"); // tiempo de ejecucion
         menuReportes();
     }
     public static void showReporte3() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
-        Object[] resultado = Reportes.reporte3(movieHash);
+        Object[] resultado = Reportes.reporte3(movieYearIndex, movieIndex);
         for (Object[] t : (Object[][]) resultado){
             System.out.println("Id película: ");
             System.out.println("Nombre: ");

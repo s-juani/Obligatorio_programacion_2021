@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Hashtable;
 
 /**
  * Esto es total y completamente en modalidad de prueba, esta clase no es definitiva y
@@ -104,17 +103,6 @@ public abstract class fileReader {
                         } else if (deathArray.length==1) death[2]=deathArray[0]; //country
                     }
 
-                    //cause of death -> to list
-                    MyArrayList<String> causes = new MyArrayListImpl<>(5);
-                    for (String t : row[11].split(",")) {
-                        for (String s : t.split("and")) {
-                            if (!s.equals(" ") && !s.equals("")) causes.add(s);
-                        }
-                    }
-                    String[] causesOfDeath = new String[causes.size()];
-                    for (int i=0; i<causes.size(); i++) {
-                        causesOfDeath[i]=causes.get(i);
-                    }
 
                     //birthDate -> adapt to java.date
                     Date birthDate = null;  // row[6]
@@ -141,9 +129,7 @@ public abstract class fileReader {
                     if (!row[6].equals("")){
                         try{
                             deathDate = new SimpleDateFormat("yyyy-MM-dd").parse(row[9]);
-                        } catch (ParseException e){
-                            //ignore
-                        }
+                        } catch (ParseException ignore){}
                     }
 
 
@@ -156,7 +142,7 @@ public abstract class fileReader {
                                                             death[0],       //row[10] array con death city, state, country
                                                             death[1],
                                                             death[2],
-                                                            causesOfDeath,
+                                                            row[11],
                                                             row[12],
                                                             spouses,
                                                             divorces,
@@ -193,6 +179,7 @@ public abstract class fileReader {
                     //------------
                     hashToReturn.put(memberToAdd.hashCode(),memberToAdd);
 
+
                     column = 0;
                     inQuotes = false;
                 }
@@ -219,6 +206,8 @@ public abstract class fileReader {
         final String castPath = "dataset\\IMDb movies2.csv";
 
         HashTable<Integer,Movie> hashToReturn = new ClosedHashTable<>(171711, 0.5f); //ajustar tamanio
+
+        HashTable<Integer,Lista<Movie>> yearIndex = new ClosedHashTable<>(203,0.5f);
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
@@ -340,13 +329,25 @@ public abstract class fileReader {
                     //------------
 
                     hashToReturn.put(movieToAdd.hashCode(),movieToAdd);
+                    /*
+                    try {
+                        if(year != null) yearIndex.get(year).add(movieToAdd);
+                    } catch (KeyNotExistsException e) {
+                        try {
+                            yearIndex.put(year, new ListaEnlazada<>());
+                            yearIndex.get(year).add(movieToAdd);
+                        } catch (KeyAlreadyExistsException ignored) {}
+                    }
+                    */
+
+
 
                     column = 0;
                     inQuotes = false;
                 }
                 // FINISH
-            }
-        } catch (IOException | KeyAlreadyExistsException e) {
+            }  // | KeyNotExistsException
+        } catch (IOException |KeyAlreadyExistsException e) {
             e.printStackTrace();
         } finally {
             try{
@@ -677,6 +678,7 @@ public abstract class fileReader {
                             movieIndex.get(movie.hashCode()).add(movieCastMemberToAdd);
                         } catch (KeyAlreadyExistsException ignored) {}
                     }
+
 
 
                     /*

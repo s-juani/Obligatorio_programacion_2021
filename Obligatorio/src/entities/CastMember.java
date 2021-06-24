@@ -11,16 +11,19 @@ import java.util.Date;
 
 public class CastMember {
 
-    private static Lista<CastMember> iterator = new ListaEnlazada<>(); // new: para iterar sobre las instancias de CastMember
+    /*private static Lista<CastMember> iterator = new ListaEnlazada<>(); // new: para iterar sobre las instancias de CastMember
     public static Lista<CastMember> getIterator() {
         return iterator;
     }
 
+     */
+
+
+
+    private static HashTable<Integer,CauseOfDeath> causeOfDeathHash = new ClosedHashTable<>(30,0.7f);
     public static HashTable<Integer, CauseOfDeath> getCauseOfDeathHash() {
         return causeOfDeathHash;
     }
-
-    private static HashTable<Integer,CauseOfDeath> causeOfDeathHash = new ClosedHashTable<>(30,0.7f);
 
     private final String imdbNameId;
     private final String name;
@@ -35,7 +38,7 @@ public class CastMember {
     private final String deathCity;
     private final String deathState;
     private final String deathCountry;
-    private final CauseOfDeath[] reasonOfDeath;
+    private final CauseOfDeath reasonOfDeath;
     private final String spousesString;
     private final Integer spouses;
     private final Integer divorces;
@@ -43,7 +46,7 @@ public class CastMember {
     private final Integer children;
     private Lista<String> ocupation = new ListaEnlazada<>();
 
-    public CastMember(String imdbNameId, String name, String birthName, Integer height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String[] reasonOfDeath, String spousesString, Integer spouses, Integer divorces, Integer spousesWithChildren, Integer children) throws KeyNotExistsException, KeyAlreadyExistsException {
+    public CastMember(String imdbNameId, String name, String birthName, Integer height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String reasonOfDeath, String spousesString, Integer spouses, Integer divorces, Integer spousesWithChildren, Integer children) throws KeyNotExistsException, KeyAlreadyExistsException {
         this.imdbNameId = imdbNameId;       //0
         this.name = name;                   //1
         this.birthName = birthName;         //2
@@ -63,9 +66,12 @@ public class CastMember {
         this.divorces = divorces;           //14
         this.spousesWithChildren = spousesWithChildren; //15
         this.children = children;           //16
-        iterator.add(this);
+        //iterator.add(this);
     }
 
+    public CauseOfDeath getReasonOfDeath() {
+        return reasonOfDeath;
+    }
 
     public String getImdbNameId() {
         return imdbNameId;
@@ -106,6 +112,7 @@ public class CastMember {
     public String getDeathCity() {
         return deathCity;
     }
+    /*
     public CauseOfDeath getReasonOfDeath(int position) {
         if (position >= reasonOfDeath.length){
             return null;
@@ -113,9 +120,11 @@ public class CastMember {
             return reasonOfDeath[position];
         }
     }
+
     public Integer getReasonOfDeathLenght(){
         return reasonOfDeath.length;
     }
+    */
     public String getSpousesString() {
         return spousesString;
     }
@@ -155,10 +164,17 @@ public class CastMember {
         return Integer.parseInt(imdbNameId.substring(2));
     }
 
-    private CauseOfDeath[] addReasonOfDeath(String[] reasons) throws KeyNotExistsException, KeyAlreadyExistsException {
-        CauseOfDeath temp;
-        CauseOfDeath[] causes = new CauseOfDeath[reasons.length];
-        int i = 0;
+    private CauseOfDeath addReasonOfDeath(String reason) throws KeyNotExistsException, KeyAlreadyExistsException {
+        CauseOfDeath temp = new CauseOfDeath(reason);
+
+        if (!causeOfDeathHash.contains((temp.hashCode()))){
+            causeOfDeathHash.put(temp.hashCode(),temp);
+        } else {
+            temp = causeOfDeathHash.get(temp.hashCode());
+        }
+        return temp;
+
+        /*int i = 0;
         for (String reason : reasons) {
             temp = new CauseOfDeath(reason);
             if (!causeOfDeathHash.contains(temp.hashCode())){
@@ -168,7 +184,8 @@ public class CastMember {
             }
             causes[i] = temp;
             i++;
-        }
+        }*/
+
         /*String[] reasons = row[11].split(",");
 
                     CauseOfDeath[] causesOfDeath = new CauseOfDeath[reasons.length];
@@ -181,7 +198,7 @@ public class CastMember {
                         }
                         causesOfDeath[i] = causeOfDeath;
                     }*/
-        return causes;
+
     }
 
 

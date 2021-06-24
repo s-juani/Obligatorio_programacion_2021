@@ -67,7 +67,7 @@ public class MyArrayListImpl<K> implements MyArrayList<K> {
     @Override
     public boolean contains(K value){
         for (K k : list) {
-            if (k == value) return true;
+            if (k.equals(value)) return true;
         }
         return false;
     }

@@ -31,19 +31,19 @@ public abstract class Reportes {
         MovieCastMember movieCastMember;
         castMemberIndex.iteratorReset();
         int apariciones;
-        while ((movieList = castMemberIndex.iteratorNext()) != null){
+        while ((movieList = castMemberIndex.iteratorNext()) != null) {
             apariciones = 0;
             movieList.iteratorReset();
             movieCastMember = movieList.iteratorNext();
             castMember = movieCastMember.getCastMember();
-            while ((movieCastMember) != null){
-                if (movieCastMember.getCategory().equals("actor") || movieCastMember.getCategory().equals("actress")){
-                    apariciones ++;
+            while ((movieCastMember) != null) {
+                if (movieCastMember.getCategory().equals("actor") || movieCastMember.getCategory().equals("actress")) {
+                    apariciones++;
                 }
                 movieCastMember = movieList.iteratorNext();
             }
-            if (apariciones!=0){
-                if (topHeap.size()==5) {
+            if (apariciones != 0) {
+                if (topHeap.size() == 5) {
                     if (((Integer) topHeap.top()[0]) < apariciones) {
                         topHeap.delete();
                         topHeap.add(apariciones, castMember);
@@ -53,13 +53,10 @@ public abstract class Reportes {
                 }
             }
         }
-
         for (int p = 4; p >= 0; p--){
             Object[] element = topHeap.remove();
             top5[p] = new Object[]{element[0],element[1]};
         }
-
-
 
         /*
         for (Nodo<CastMember> member = castMemberIndex.iteratorNext(); member.getNext()!=null; member = member.getNext()){
@@ -77,8 +74,6 @@ public abstract class Reportes {
         }
 
          */
-
-
 
         return top5;
 
@@ -116,7 +111,7 @@ public abstract class Reportes {
         CastMember castMember;
         String country;
 
-        MyArrayList<SortNode<Integer,CauseOfDeath>> list = new MyArrayListImpl<>();
+        MyArrayList<SortNode<Integer,CauseOfDeath>> list = new MyArrayListImpl<>(1000);
 
         while ((castMember = castMemberHash.iteratorNext())!=null){
             country = castMember.getBirthCountry();
@@ -124,44 +119,30 @@ public abstract class Reportes {
                 if (castMember.getOcupation().find("producer") || castMember.getOcupation().find("director")){
 
                     //agregar causa de muerte al arrayList o incrementar su cantidad si ya estaba
-
-                    for (int i=0; i<castMember.getReasonOfDeathLenght(); i++){
-                        boolean hasCauseOfDeath = false;
-                        for (int j=0; j<list.getLenght(); j++){
-                            if (list.get(j).getValue().equals(castMember.getReasonOfDeath(i))){
-                                list.get(j).setKey(list.get(j).getKey() + 1);
-                                hasCauseOfDeath = true;
-                                break; // verificar que no corte el loop for de la i
-                            }
-                        }
-                        if (!hasCauseOfDeath){
-                            SortNode<Integer,CauseOfDeath> temp = new SortNode<>(1, castMember.getReasonOfDeath(i));
-                            list.add(temp);
+                    boolean hasCauseOfDeath = false;
+                    for (int j=0; j<list.size(); j++){
+                        //System.out.println(list.get(j).getValue().getName());
+                        if (list.get(j).getValue().getName() == castMember.getReasonOfDeath().getName()){
+                            list.get(j).setKey(list.get(j).getKey() + 1);
+                            hasCauseOfDeath = true;
+                            break;
                         }
                     }
-
-
-
-
-                    /*Object[] coso = new Object[2];
-                    coso[0] = 3;
-                    coso[1] = "abcd";
-                    list.add(coso);
-                    Integer x = (int) list.get(0)[0];*/
-
+                    if (!hasCauseOfDeath && castMember.getReasonOfDeath()!=null){
+                        SortNode<Integer,CauseOfDeath> temp = new SortNode<>(1, castMember.getReasonOfDeath());
+                        list.add(temp);
+                    }
                 }
             }
         }
         Sort<Integer,CauseOfDeath> sort = new Sort<>();
-        sort.QuickSort(list);
-
+        sort.quickSort(list, 0, list.size()-1);
 
         for (int i=0; i<5; i++){
             SortNode<Integer, CauseOfDeath> temp = list.get(i);
             top5[i][0] = String.valueOf(temp.getKey());
             top5[i][1] = temp.getValue().getName();
         }
-
 
         /**
          * Iterar castMemberHash, checkear si ocupacion.contains(productor) >> checkear si birthCountry.contains(pais) >>
@@ -171,29 +152,113 @@ public abstract class Reportes {
          * >> extraer los primeros 5
          */
 
-
-
-
-
-
-
         return top5;
     }
 
 
     // de las 14 peliculas de 1950-1960 con mas weightedAverage determinar el promedio de altura de los actores (not null)
-    public static Object[] reporte3(HashTable<Integer, Movie> movieHash){
-        // obtener todas las peliculas de 1950-1960 (hash indexado por anio)
-        // extraer las 14 peliculas con mas weightedAverage (heap con weightedAverage como key y remove 14 veces)
+    public static Object[][] reporte3(HashTable<Integer, Lista<Movie>> yearMovieIndex,
+                                    HashTable<Integer, Lista<MovieCastMember>> movieCastMemberIndex){
+        Object[][] resultado = new Object[14][2];
+        Heap<Float, Movie> topHeap = new HeapImpl<>(14,"min");
+
+        // extraer las 14 peliculas de 1950-1960 con mas weightedAverage
+        for (int year = 1950; year<=1960; year++){
+            try{
+                Lista<Movie> movieList = yearMovieIndex.get(year);
+                movieList.iteratorReset();
+                Movie tempMovie;
+                while ((tempMovie = movieList.iteratorNext()) != null){
+                    Float wheightedAverage = tempMovie.getRating().getWeightedAverage();
+                    if (topHeap.size() == 14) {
+                        if (((Float) topHeap.top()[0]) < wheightedAverage) {
+                            topHeap.delete();
+                            topHeap.add(wheightedAverage, tempMovie);
+                        }
+                    } else topHeap.add(wheightedAverage, tempMovie);
+                }
+            } catch (KeyNotExistsException | HeapOverflowException | EmptyHeapException ignore) {}
+        }
+
         // en cada pelicula obtener los actores y calcular su promedio de altura
-        return new Object[14];
+        int i = 0;
+        while (topHeap.size()!=0){
+            try {
+                Movie movie = (Movie) topHeap.remove()[1];
+                float promedio = 0.0f;
+                Integer altura;
+                int cantidad = 0;
+
+                Lista<MovieCastMember> actorsList = movieCastMemberIndex.get(movie.hashCode());
+                actorsList.iteratorReset();
+                MovieCastMember movieCastMember;
+                while ((movieCastMember = actorsList.iteratorNext()) != null){
+                    if (movieCastMember.getCategory().equals("actor") || movieCastMember.getCategory().equals("actress")){
+                        altura = movieCastMember.getCastMember().getHeight();
+                        if (altura != null){
+                            promedio += (float) altura;
+                            cantidad++;
+                        }
+                    }
+                }
+                if (cantidad != 0) {
+                    promedio /= (float) cantidad;
+                    resultado[i] = new Object[]{promedio, movie};
+                    i++;
+                }
+
+            } catch (KeyNotExistsException | EmptyHeapException | HeapOverflowException ignore) {}
+        }
+        return resultado;
     }
 
     // anio mas frecuente de nacimiento de actores y actrices
     public static Object[][] reporte4(HashTable<Integer, CastMember> castMemberHash){
-        // usar CastMember.iterator y filtrar por roles.find(actor,actress)
-        // ir agregando los anios de nacimiento a una lista ordenada por cantidad de nacimientos (una por actor y otra por actriz)
-        // obtener el anio con mas nacimientos en ambos casos
+
+        //sortNode = key:year , value:[cantidad actores, cantidad actrices]
+        MyArrayList<SortNode<Integer, Integer[]>> list = new MyArrayListImpl<>(200);
+        castMemberHash.iteratorReset();
+        CastMember castMember;
+        while ((castMember = castMemberHash.iteratorNext()) != null){
+            if (castMember.getBirthDate()!=null){
+                Integer year = castMember.getBirthDate().getYear();
+                boolean yearExists = false;
+                for (int j=0; j<list.size(); j++){
+                    //System.out.println(list.get(j).getValue().getName());
+                    if (list.get(j).getKey().equals(year)){
+                        if (castMember.getOcupation().find("actor")){
+                            Integer[] cantidad = list.get(j).getValue();
+                            cantidad[0]++;
+                            list.get(j).setValue(cantidad);
+                        } else if (castMember.getOcupation().find("actress")){
+                            Integer[] cantidad = list.get(j).getValue();
+                            cantidad[1]++;
+                            list.get(j).setValue(cantidad);
+                        }
+                        yearExists = true;
+                        break;
+                    }
+                }
+                if (!yearExists){
+                    Integer[] cantidad = new Integer[]{0, 0};;
+                    if (castMember.getOcupation().find("actor")){
+                        cantidad[0] = 1;
+                    } else if (castMember.getOcupation().find("actress")){
+                        cantidad[1] = 1;
+                    }
+                    SortNode<Integer, Integer[]> temp = new SortNode<>(year,cantidad);
+                    list.add(temp);
+                }
+            //actors
+                int yearActor = 0;
+                int yearActress = 0;
+                for (int i = 0; i < list.size(); i++){
+
+                }
+
+
+            }
+        }
 
         return new Object[2][2];
     }
