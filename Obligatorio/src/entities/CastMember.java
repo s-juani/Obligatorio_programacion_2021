@@ -11,17 +11,8 @@ import java.util.Date;
 
 public class CastMember {
 
-    /*private static Lista<CastMember> iterator = new ListaEnlazada<>(); // new: para iterar sobre las instancias de CastMember
-    public static Lista<CastMember> getIterator() {
-        return iterator;
-    }
-
-     */
-
-
-
-    private static HashTable<Integer,CauseOfDeath> causeOfDeathHash = new ClosedHashTable<>(30,0.7f);
-    public static HashTable<Integer, CauseOfDeath> getCauseOfDeathHash() {
+    private static HashTable<String, CauseOfDeath> causeOfDeathHash = new ClosedHashTable<>(30,0.7f);
+    public static HashTable<String, CauseOfDeath> getCauseOfDeathHash() {
         return causeOfDeathHash;
     }
 
@@ -31,6 +22,7 @@ public class CastMember {
     private final Integer height;
     private final String bio;
     private final Date birthDate;
+    private final Integer birthYear;
     private final String birthCity;
     private final String birthState;
     private final String birthCountry;
@@ -46,13 +38,14 @@ public class CastMember {
     private final Integer children;
     private Lista<String> ocupation = new ListaEnlazada<>();
 
-    public CastMember(String imdbNameId, String name, String birthName, Integer height, String bio, Date birthDate, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String reasonOfDeath, String spousesString, Integer spouses, Integer divorces, Integer spousesWithChildren, Integer children) throws KeyNotExistsException, KeyAlreadyExistsException {
+    public CastMember(String imdbNameId, String name, String birthName, Integer height, String bio, Date birthDate, Integer birthYear, String birthCity, String birthState, String birthCountry, Date deathDate, String deathCity, String deathState, String deathCountry, String reasonOfDeath, String spousesString, Integer spouses, Integer divorces, Integer spousesWithChildren, Integer children) throws KeyNotExistsException, KeyAlreadyExistsException {
         this.imdbNameId = imdbNameId;       //0
         this.name = name;                   //1
         this.birthName = birthName;         //2
         this.height = height;               //3
         this.bio = bio;                     //4
         this.birthDate = birthDate;         //6
+        this.birthYear = birthYear;
         this.birthCity = birthCity;         //7
         this.birthState = birthState;       //7
         this.birthCountry = birthCountry;   //7
@@ -69,10 +62,10 @@ public class CastMember {
         //iterator.add(this);
     }
 
+
     public CauseOfDeath getReasonOfDeath() {
         return reasonOfDeath;
     }
-
     public String getImdbNameId() {
         return imdbNameId;
     }
@@ -91,6 +84,7 @@ public class CastMember {
     public Date getBirthDate() {
         return birthDate;
     }
+    public Integer getBirthYear() {return birthYear;}
     public String getBirthCity() {
         return birthCity;
     }
@@ -167,12 +161,13 @@ public class CastMember {
     private CauseOfDeath addReasonOfDeath(String reason) throws KeyNotExistsException, KeyAlreadyExistsException {
         CauseOfDeath temp = new CauseOfDeath(reason);
 
-        if (!causeOfDeathHash.contains((temp.hashCode()))){
-            causeOfDeathHash.put(temp.hashCode(),temp);
+        if (!causeOfDeathHash.contains((temp.getName()))){
+            causeOfDeathHash.put(temp.getName(),temp);
         } else {
-            temp = causeOfDeathHash.get(temp.hashCode());
+            temp = causeOfDeathHash.get(temp.getName());
         }
         return temp;
+
 
         /*int i = 0;
         for (String reason : reasons) {
@@ -202,24 +197,24 @@ public class CastMember {
     }
 
 
-    /*
-     * row[0] = imdb_name_id            String
-     * row[1] = name                    String
-     * row[2] = birth_name              String
-     * row[3] = height                  int
-     * row[4] = bio                     String
-     * row[5] = birth_details        -- IGNORAR ------
-     * row[6] = date_of_birth           Date
-     * row[7] = place_of_birth          String[birthState, birthCountry, birthCity]
-     * row[8] = death_details        -- IGNORAR ------
-     * row[9] = date_of_death           Date
-     * row[10] = place_of_death         String[deathState, deathCountry, deathCity]
-     * row[11] = reason_of_death        CauseOfDeath (name String)
-     * row[12] = spouses_string         String
-     * row[13] = spouses                int
-     * row[14] = divorces               int
-     * row[15] = spouses_with_children  int
-     * row[16] = children               int
+    /**
+      row[0] = imdb_name_id            String
+      row[1] = name                    String
+      row[2] = birth_name              String
+      row[3] = height                  int
+      row[4] = bio                     String
+      row[5] = birth_details        -- IGNORAR ------
+      row[6] = date_of_birth           Date
+      row[7] = place_of_birth          String[birthState, birthCountry, birthCity]
+      row[8] = death_details        -- IGNORAR ------
+      row[9] = date_of_death           Date
+      row[10] = place_of_death         String[deathState, deathCountry, deathCity]
+      row[11] = reason_of_death        CauseOfDeath (name String)
+      row[12] = spouses_string         String
+      row[13] = spouses                int
+      row[14] = divorces               int
+      row[15] = spouses_with_children  int
+      row[16] = children               int
      */
 
 

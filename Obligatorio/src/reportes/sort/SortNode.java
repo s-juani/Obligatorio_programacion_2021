@@ -1,6 +1,6 @@
 package reportes.sort;
 
-public class SortNode<K extends Comparable<K>,V> {
+public class SortNode<K extends Comparable<K>,V> implements Comparable<SortNode<K, V>> {
     private K key;
     private V value;
 
@@ -29,8 +29,12 @@ public class SortNode<K extends Comparable<K>,V> {
     public boolean equals(Object o){
         if (o instanceof SortNode) {
             SortNode<K,V> s = (SortNode<K,V>) o;
-            return key.equals(s.getKey());
+            return value.equals(s.getValue());
         }
         return false;
+    }
+
+    public int compareTo(SortNode<K, V> o) {
+        return Integer.compare(this.key.compareTo(o.getKey()), 0);
     }
 }

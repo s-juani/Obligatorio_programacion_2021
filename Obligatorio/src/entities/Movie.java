@@ -1,17 +1,25 @@
 package entities;
 
+import TADs.ClosedHash.ClosedHashTable;
+import TADs.ClosedHash.HashTable;
+import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
+import TADs.ClosedHash.exceptions.KeyNotExistsException;
 import TADs.LinkedList.ListaEnlazada;
 import TADs.LinkedList.interfaces.Lista;
 import TADs.arraylist.MyArrayList;
 import TADs.arraylist.MyArrayListImpl;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class Movie {
 
-   private static Lista<Movie> iterator = new ListaEnlazada<>();
-   public static Lista<Movie> getIterator() {
-      return iterator;
+
+   private static HashTable<Integer, Lista<Movie>> yearIndex = new ClosedHashTable<>(203,0.5f);
+
+   private static HashTable<String, Genre> genreHash = new ClosedHashTable<>(30,0.7f);
+   public static HashTable<String, Genre> getGenreHash() {
+      return genreHash;
    }
 
    private String imdbTitleId;
@@ -19,7 +27,7 @@ public class Movie {
    private String originalTitle;
    private Integer year;
    private Date datePublished;
-   private String[] genre;
+   private Genre[] genre;
    private Integer duration;
    private String[] country;
    private String language;
@@ -44,7 +52,7 @@ public class Movie {
       this.originalTitle = originalTitle;
       this.year = year;
       this.datePublished = datePublished;
-      this.genre = genre;
+      this.genre = addGenre(genre);
       this.duration = duration;
       this.country = country;
       this.language = language;
@@ -62,7 +70,10 @@ public class Movie {
       this.reviewsFromUsers = reviewsFromUsers;
       this.reviewsFromCritics = reviewsFromCritics;
       this.rating = null;
-      iterator.add(this);
+   }
+
+   public static HashTable<Integer, Lista<Movie>> getYearIndex() {
+      return yearIndex;
    }
 
    public MovieRating getRating() {
@@ -71,6 +82,30 @@ public class Movie {
 
    public void setRating(MovieRating rating) {
       this.rating = rating;
+   }
+
+   public Genre[] addGenre(String[] genreList){
+      if (genreList == null) return null;
+      Genre temp;
+      Genre[] genres;
+      MyArrayList<Genre> genresArray = new MyArrayListImpl<>(5);
+      for (String genre : genreList) {
+         temp = new Genre(genre);
+         try {
+            if (!genreHash.contains(temp.getName())) {
+               genreHash.put(temp.getName(), temp);
+            } else {
+               temp = genreHash.get(temp.getName());
+            }
+            genresArray.add(temp);
+         } catch (KeyAlreadyExistsException | KeyNotExistsException ignore) {}
+      }
+
+      genres = new Genre[genresArray.size()];
+      for (int i = 0; i<genres.length; i++){
+         genres[i] = genresArray.get(i);
+      }
+      return genres;
    }
 
    public boolean equals(Object o){
@@ -108,7 +143,7 @@ public class Movie {
       return datePublished;
    }
 
-   public String[] getGenre() {
+   public Genre[] getGenre() {
       return genre;
    }
 

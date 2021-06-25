@@ -1,13 +1,20 @@
 package entities;
 
+import TADs.ClosedHash.ClosedHashTable;
+import TADs.ClosedHash.HashTable;
 import TADs.LinkedList.ListaEnlazada;
 import TADs.LinkedList.interfaces.Lista;
 
 public class MovieCastMember {
+    private static HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(595411,0.5f);
+    private static HashTable<Integer, Lista<MovieCastMember>> movieIndex = new ClosedHashTable<>(171711,0.5f);
 
-    private static Lista<MovieCastMember> iterator = new ListaEnlazada<>();
-    public static Lista<MovieCastMember> getIterator() {
-        return iterator;
+    public static HashTable<Integer, Lista<MovieCastMember>> getCastMemberIndex() {
+        return castMemberIndex;
+    }
+
+    public static HashTable<Integer, Lista<MovieCastMember>> getMovieIndex() {
+        return movieIndex;
     }
 
     private Movie movie; //new
@@ -24,7 +31,6 @@ public class MovieCastMember {
         this.category = category;
         this.job = job;
         this.characters = characters;
-        iterator.add(this);
     }
 
     public long longHashCode(){

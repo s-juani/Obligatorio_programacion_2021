@@ -18,10 +18,7 @@ public class Main{
 
     public static HashTable<Integer, CastMember> castMemberHash;
     public static HashTable<Integer, Movie> movieHash;
-    public static HashTable<Integer, Lista<Movie>> movieYearIndex;
     public static HashTable<Long, MovieCastMember> movieCastMemberHash;
-    public static HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(595411,0.5f);
-    public static HashTable<Integer, Lista<MovieCastMember>> movieIndex;
 
 
     //especificar tamaño de las tablas en los constructores
@@ -77,21 +74,24 @@ public class Main{
     }
 
     public static void showReporte1() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
+        long startTime = System.nanoTime();
+        Object[][] top5 = Reportes.reporte1(MovieCastMember.getCastMemberIndex());
 
-        Object[][] top5 = Reportes.reporte1(castMemberIndex);
         for (Object[] t : top5){
             CastMember member = (CastMember) t[1];
             int apariciones = (int) t[0];
             System.out.println("Nombre actor/actriz: " + member.getName());
             System.out.println("Cantidad de apariciones: " + apariciones + "\n");
         }
-        System.out.println("Tiempo de ejecución de la consulta: " + "\n"); // tiempo de ejecucion
+        long finishTime = System.nanoTime();
+        finishTime -= startTime;
+        finishTime /= 1000000;
+        System.out.println("Tiempo de ejecución de la consulta: " + finishTime + " ms\n"); // tiempo de ejecucion // tiempo de ejecucion
         menuReportes();
     }
     public static void showReporte2() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
-        String[][] top5 = Reportes.reporte2(castMemberHash);
-
         long startTime = System.nanoTime();
+        String[][] top5 = Reportes.reporte2(castMemberHash);
 
         for (int i=0; i<5; i++){
             System.out.println("Causa de muerte: " + top5[i][1]);
@@ -106,17 +106,26 @@ public class Main{
         menuReportes();
     }
     public static void showReporte3() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
-        Object[] resultado = Reportes.reporte3(movieYearIndex, movieIndex);
-        for (Object[] t : (Object[][]) resultado){
-            System.out.println("Id película: ");
-            System.out.println("Nombre: ");
-            System.out.println("Altura promedio de actores:" + "\n");
+        long startTime = System.nanoTime();
+        Object[][] resultado = Reportes.reporte3(Movie.getYearIndex(), MovieCastMember.getMovieIndex());
+        for (int i = 0; resultado[i][0]!=null; i++){
+            Movie movie = (Movie) resultado[i][1];
+            float promedio = (float) resultado[i][0];
+            System.out.println("Id película: " + movie.getImdbTitleId());
+            System.out.println("Nombre: " + movie.getTitle());
+            System.out.println("Altura promedio de actores:" + promedio + "\n");
 
         }
-        System.out.println("Tiempo de ejecución de la consulta: " + "\n"); // tiempo de ejecucion
+
+        long finishTime = System.nanoTime();
+        finishTime -= startTime;
+        finishTime /= 1000000;
+
+        System.out.println("Tiempo de ejecución de la consulta: " + finishTime + "ms\n");// tiempo de ejecucion
         menuReportes();
     }
     public static void showReporte4() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
+        long startTime = System.nanoTime();
         Object[][] resultado = Reportes.reporte4(castMemberHash);
         System.out.println("Actores: ");
         System.out.println("        Año: " + resultado[0][0]);
@@ -124,18 +133,29 @@ public class Main{
         System.out.println("Actrices: ");
         System.out.println("        Año: " + resultado[1][0]);
         System.out.println("        Cantidad: " + resultado[1][1] + "\n");
-        System.out.println("Tiempo de ejecución de la consulta: " + "\n"); // tiempo de ejecucion
+
+        long finishTime = System.nanoTime();
+        finishTime -= startTime;
+        finishTime /= 1000000;
+
+        System.out.println("Tiempo de ejecución de la consulta: " + finishTime + "ms\n"); // tiempo de ejecucion
         menuReportes();
     }
     public static void showReporte5() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
-        Object[] top10 = Reportes.reporte5(movieHash);
-        for (Object[] t : (Object[][]) top10){
-            System.out.println("Genero pelicula: ");
-            System.out.println("Cantidad: " + "\n");
+        long startTime = System.nanoTime();
+        String[][] top10 = Reportes.reporte5(MovieCastMember.getMovieIndex());
+        for (String[] t : top10){
+            System.out.println("Genero pelicula: " + t[1]);
+            System.out.println("Cantidad: " + t[0] + "\n");
         }
-        System.out.println("Tiempo de ejecución de la consulta: " + "\n"); // tiempo de ejecucion
+        long finishTime = System.nanoTime();
+        finishTime -= startTime;
+        finishTime /= 1000000;
+
+        System.out.println("Tiempo de ejecución de la consulta: " + finishTime + "ms\n"); // tiempo de ejecucion
         menuReportes();
     }
+
     public static void salir(){
         System.exit(0);
     }
@@ -145,9 +165,9 @@ public class Main{
         long startTime = System.nanoTime();
 
         castMemberHash = fileReader.readCastMember(); //carga causeOfDeathHash y castMemberHash
-        movieHash = fileReader.readMovie();  //carga movieHash y ratingHash
-        movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash,castMemberIndex);
-        fileReader.readMovieRating(movieHash);
+        movieHash = fileReader.readMovie();  //carga movieHash
+        movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash); //carga movieCastMemberHash
+        fileReader.readMovieRating(movieHash); //carga las instancias de Rating y de MovieRating
 
         long finishTime = System.nanoTime();
         finishTime -= startTime;

@@ -106,9 +106,11 @@ public abstract class fileReader {
 
                     //birthDate -> adapt to java.date
                     Date birthDate = null;  // row[6]
+                    Integer birthYear = null;
                     if (!row[6].equals("")){
                         try{
                             birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(row[6]);
+                            birthYear = Integer.parseInt(row[6].substring(0,4));
                         } catch (Exception e){
                             String year = "";
                             for (int i=0; i<row[6].length(); i++){
@@ -126,7 +128,7 @@ public abstract class fileReader {
 
                     //deathDate -> adapt to java.date
                     Date deathDate = null; //row[9]
-                    if (!row[6].equals("")){
+                    if (!row[9].equals("")){
                         try{
                             deathDate = new SimpleDateFormat("yyyy-MM-dd").parse(row[9]);
                         } catch (ParseException ignore){}
@@ -134,7 +136,8 @@ public abstract class fileReader {
 
 
                     CastMember memberToAdd = new CastMember(row[0], row[1], row[2], height, row[4],
-                                                            birthDate,      // row[6] buscar como castear a Date
+                                                            birthDate,// row[6] buscar como castear a Date
+                                                            birthYear,
                                                             birth[0],       //row[7] array con birth city, state, country
                                                             birth[1],
                                                             row[7],
@@ -207,8 +210,6 @@ public abstract class fileReader {
 
         HashTable<Integer,Movie> hashToReturn = new ClosedHashTable<>(171711, 0.5f); //ajustar tamanio
 
-        HashTable<Integer,Lista<Movie>> yearIndex = new ClosedHashTable<>(203,0.5f);
-
         try{
             reader = new BufferedReader(new FileReader(castPath));
             line = reader.readLine(); //saltear cabezales de columna
@@ -250,7 +251,8 @@ public abstract class fileReader {
                 }
 
                 // String[] casts: genre, country, director, writer, actors
-                String[] genre = row[5].split(",");
+                String[] genre = null;
+                if (row[5] != null) genre = row[5].split(",");
                 String[] country = row[7].split(",");
                 String[] director = row[9].split(",");
                 String[] writer = row[10].split(",");
@@ -329,16 +331,16 @@ public abstract class fileReader {
                     //------------
 
                     hashToReturn.put(movieToAdd.hashCode(),movieToAdd);
-                    /*
+
                     try {
-                        if(year != null) yearIndex.get(year).add(movieToAdd);
+                        if(year != null) Movie.getYearIndex().get(year).add(movieToAdd);
                     } catch (KeyNotExistsException e) {
                         try {
-                            yearIndex.put(year, new ListaEnlazada<>());
-                            yearIndex.get(year).add(movieToAdd);
+                            Movie.getYearIndex().put(year, new ListaEnlazada<>());
+                            Movie.getYearIndex().get(year).add(movieToAdd);
                         } catch (KeyAlreadyExistsException ignored) {}
                     }
-                    */
+
 
 
 
@@ -346,8 +348,8 @@ public abstract class fileReader {
                     inQuotes = false;
                 }
                 // FINISH
-            }  // | KeyNotExistsException
-        } catch (IOException |KeyAlreadyExistsException e) {
+            }  //
+        } catch (IOException | KeyNotExistsException |KeyAlreadyExistsException e) {
             e.printStackTrace();
         } finally {
             try{
@@ -597,17 +599,13 @@ public abstract class fileReader {
     }
 
     public static HashTable<Long, MovieCastMember> readTitlePrincipals(HashTable<Integer, Movie> movieHash,
-                                                                       HashTable<Integer, CastMember> memberHash,
-                                                                       HashTable<Integer, Lista<MovieCastMember>> castMemberIndex){
+                                                                       HashTable<Integer, CastMember> memberHash){
 
         BufferedReader reader = null;
         String line;
         String[] row = new String[6];
         int column;
         final String titlePrincipalsPath = "dataset\\IMDb title_principals2.csv";
-
-        //HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(595411,0.5f);
-        HashTable<Integer, Lista<MovieCastMember>> movieIndex = new ClosedHashTable<>(171711,0.5f);
 
         HashTable<Long, MovieCastMember> hashToReturn = new ClosedHashTable<>(1670954,0.5f);
 
@@ -662,20 +660,20 @@ public abstract class fileReader {
                     MovieCastMember movieCastMemberToAdd = new MovieCastMember(movie, ordering, castMember, row[3], row[4], characters);
 
                     try {
-                        castMemberIndex.get(castMember.hashCode()).add(movieCastMemberToAdd);
+                        MovieCastMember.getCastMemberIndex().get(castMember.hashCode()).add(movieCastMemberToAdd);
                     } catch (KeyNotExistsException e) {
                         try {
-                            castMemberIndex.put(castMember.hashCode(), new ListaEnlazada<>());
-                            castMemberIndex.get(castMember.hashCode()).add(movieCastMemberToAdd);
+                            MovieCastMember.getCastMemberIndex().put(castMember.hashCode(), new ListaEnlazada<>());
+                            MovieCastMember.getCastMemberIndex().get(castMember.hashCode()).add(movieCastMemberToAdd);
                         } catch (KeyAlreadyExistsException ignored) {}
                     }
 
                     try {
-                        movieIndex.get(movie.hashCode()).add(movieCastMemberToAdd);
+                        MovieCastMember.getMovieIndex().get(movie.hashCode()).add(movieCastMemberToAdd);
                     } catch (KeyNotExistsException e) {
                         try {
-                            movieIndex.put(movie.hashCode(), new ListaEnlazada<>());
-                            movieIndex.get(movie.hashCode()).add(movieCastMemberToAdd);
+                            MovieCastMember.getMovieIndex().put(movie.hashCode(), new ListaEnlazada<>());
+                            MovieCastMember.getMovieIndex().get(movie.hashCode()).add(movieCastMemberToAdd);
                         } catch (KeyAlreadyExistsException ignored) {}
                     }
 

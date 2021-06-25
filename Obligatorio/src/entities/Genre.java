@@ -1,19 +1,20 @@
 package entities;
 
-public class CauseOfDeath {
-    private String name;
+public class Genre {
 
-    public CauseOfDeath(String name) {
+    private final String name;
+
+    public Genre(String name) {
         this.name = name;
     }
 
     public boolean equals(Object o){
         if (o == this){
             return true;
-        } else if (!(o instanceof CauseOfDeath)){
+        } else if (!(o instanceof Genre)){
             return false;
         }
-        CauseOfDeath c = (CauseOfDeath) o;
+        Genre c = (Genre) o;
         return c.getName().equals(this.name);
     }
 

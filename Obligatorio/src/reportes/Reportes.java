@@ -11,10 +11,7 @@ import TADs.heap.Heap;
 import TADs.heap.HeapImpl;
 import TADs.heap.exceptions.EmptyHeapException;
 import TADs.heap.exceptions.HeapOverflowException;
-import entities.CastMember;
-import entities.CauseOfDeath;
-import entities.Movie;
-import entities.MovieCastMember;
+import entities.*;
 import reportes.sort.Sort;
 import reportes.sort.SortNode;
 
@@ -102,7 +99,6 @@ public abstract class Reportes {
     }
 
 
-
     // top 5 causas de muerte de productores y directores nacidos en Italia, USA, Francia, UK
     public static String[][] reporte2(HashTable<Integer, CastMember> castMemberHash){
         String[][] top5 = new String[5][2];
@@ -122,7 +118,7 @@ public abstract class Reportes {
                     boolean hasCauseOfDeath = false;
                     for (int j=0; j<list.size(); j++){
                         //System.out.println(list.get(j).getValue().getName());
-                        if (list.get(j).getValue().getName() == castMember.getReasonOfDeath().getName()){
+                        if (list.get(j).getValue().equals(castMember.getReasonOfDeath())){
                             list.get(j).setKey(list.get(j).getKey() + 1);
                             hasCauseOfDeath = true;
                             break;
@@ -136,12 +132,14 @@ public abstract class Reportes {
             }
         }
         Sort<Integer,CauseOfDeath> sort = new Sort<>();
-        sort.quickSort(list, 0, list.size()-1);
-
-        for (int i=0; i<5; i++){
+        //sort.quickSort(list, 0, list.size()-1);
+        sort.HeapSort(list);
+        int j=0;
+        for (int i=list.size()-1; i>list.size()-6; i--){
             SortNode<Integer, CauseOfDeath> temp = list.get(i);
-            top5[i][0] = String.valueOf(temp.getKey());
-            top5[i][1] = temp.getValue().getName();
+            top5[j][0] = String.valueOf(temp.getKey());
+            top5[j][1] = temp.getValue().getName();
+            j++;
         }
 
         /**
@@ -212,16 +210,17 @@ public abstract class Reportes {
         return resultado;
     }
 
+
     // anio mas frecuente de nacimiento de actores y actrices
     public static Object[][] reporte4(HashTable<Integer, CastMember> castMemberHash){
-
-        //sortNode = key:year , value:[cantidad actores, cantidad actrices]
+        Object[][] resultado = new Object[2][2];
+        //sortNode = key: year , value: [cantidad actores, cantidad actrices]
         MyArrayList<SortNode<Integer, Integer[]>> list = new MyArrayListImpl<>(200);
         castMemberHash.iteratorReset();
         CastMember castMember;
         while ((castMember = castMemberHash.iteratorNext()) != null){
-            if (castMember.getBirthDate()!=null){
-                Integer year = castMember.getBirthDate().getYear();
+            if (castMember.getBirthYear()!=null){
+                Integer year = castMember.getBirthYear();
                 boolean yearExists = false;
                 for (int j=0; j<list.size(); j++){
                     //System.out.println(list.get(j).getValue().getName());
@@ -249,27 +248,84 @@ public abstract class Reportes {
                     SortNode<Integer, Integer[]> temp = new SortNode<>(year,cantidad);
                     list.add(temp);
                 }
-            //actors
-                int yearActor = 0;
-                int yearActress = 0;
-                for (int i = 0; i < list.size(); i++){
-
-                }
-
-
             }
         }
 
-        return new Object[2][2];
+        SortNode<Integer, Integer[]> yearActor = list.get(0);
+        SortNode<Integer, Integer[]> yearActress = list.get(0);
+        for (int i = 1; i < list.size(); i++){
+            SortNode<Integer, Integer[]> tempYear = list.get(i);
+            if (tempYear.getValue()[0].compareTo(yearActor.getValue()[0])>0){
+                yearActor = tempYear;
+            }
+            if (tempYear.getValue()[1].compareTo(yearActress.getValue()[1])>0){
+                yearActress = tempYear;
+            }
+
+            resultado[0] = new Object[]{yearActor.getKey(), yearActor.getValue()[0]};
+            resultado[1] = new Object[]{yearActress.getKey(), yearActress.getValue()[1]};
+
+        }
+
+        return resultado;
     }
 
-    // top 10 de generos mas comunes de peliculas en las cuales haya participado algun act(or/riz) con mas de 2 hijos
-    public static Object[] reporte5(HashTable<Integer, Movie> movieHash){
-        // iterar por pelicula y filtrar segun tenga algun actor con mas de 2 hijos (getChildren()>2)
+
+    // top 10 de generos mas comunes de peliculas en las cuales haya participado algun actor/actriz con 2 o mas hijos
+    public static String[][] reporte5(HashTable<Integer, Lista<MovieCastMember>> movieIndex){
+        // iterar por pelicula y filtrar segun tenga algun actor con 2 o mas hijos (getChildren()>=2)
         // en la iteracion anterior ir agregando a una lista los generos y llevar la cuenta de la cantidad
         // filtrar los 10 generos mas comunes
+        String[][] resultado = new String[10][2];
+        MyArrayList<SortNode<Integer, Genre>> list = new MyArrayListImpl<>(200);
 
-        return new Object[10];
+        Lista<MovieCastMember> movieCastMemberList;
+        Movie movie;
+        CastMember actor;
+        movieIndex.iteratorReset();
+        boolean hasActors;
+        while ((movieCastMemberList = movieIndex.iteratorNext()) != null){
+            hasActors = false;
+            movie = movieCastMemberList.get(0).getMovie();
+            for (int p = 0; p<movieCastMemberList.size(); p++){
+                actor = movieCastMemberList.get(p).getCastMember();
+                if (actor.getOcupation().find("actor") || actor.getOcupation().find("actress")){
+                    if (actor.getChildren()>=2) {
+                        hasActors = true;
+                        break;
+                    }
+                }
+            }
+            if (hasActors){
+                for (Genre genre : movie.getGenre()){
+                    SortNode<Integer, Genre> newNode = new SortNode<>(1,genre);
+                    boolean exists = false;
+                    for (int j=0; j<list.size(); j++){
+                        if (list.get(j).equals(newNode)){
+                            list.get(j).setKey(list.get(j).getKey()+1);
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists){
+                        list.add(newNode);
+                    }
+                }
+            }
+        }
+
+        Sort<Integer, Genre> sort = new Sort<>();
+        //sort.quickSort(list, 0, list.size()-1);
+        sort.HeapSort(list);
+        int j=0;
+        for (int i=list.size()-1; i>list.size()-11; i--){
+            SortNode<Integer, Genre> temp = list.get(i);
+            resultado[j][0] = String.valueOf(temp.getKey());
+            resultado[j][1] = temp.getValue().getName();
+            j++;
+        }
+
+        return resultado;
     }
 
 

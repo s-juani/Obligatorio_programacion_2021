@@ -24,10 +24,10 @@ public class fileReaderTest {
     @Test
     public void testFlujoNormal(){
         HashTable<Integer, CastMember> castMemberHash = fileReader.readCastMember();
-        HashTable<Integer, Movie> movieHash = fileReader.readMovie();
+        //HashTable<Integer, Movie> movieHash = fileReader.readMovie();
         HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(59,0.5f);
-        fileReader.readMovieRating(movieHash);
-        fileReader.readTitlePrincipals(movieHash,castMemberHash, castMemberIndex);
+        //fileReader.readMovieRating(movieHash);
+        //fileReader.readTitlePrincipals(movieHash,castMemberHash, castMemberIndex);
     }
 
     @Test
@@ -42,20 +42,20 @@ public class fileReaderTest {
 
     @Test
     public void testMovie() throws KeyNotExistsException {
-        HashTable<Integer, Movie> castMovie = fileReader.readMovie();
+        //HashTable<Integer, Movie> castMovie = fileReader.readMovie();
         //HashTable<Integer, CauseOfDeath> causeOfDeathHash = new ClosedHashTable<>();
-        System.out.println(castMovie.get(9).getImdbTitleId());
-        System.out.println(Arrays.toString(castMovie.get(9).getCountry()));
-        System.out.println(castMovie.size());
+        //System.out.println(castMovie.get(9).getImdbTitleId());
+        //System.out.println(Arrays.toString(castMovie.get(9).getCountry()));
+        //System.out.println(castMovie.size());
         assertTrue(true);
     }
 
     @Test
     public void testMovieCastMember() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, EmptyQueueException, KeyAlreadyExistsException {
         HashTable<Integer, CastMember> castMemberHash = fileReader.readCastMember();
-        HashTable<Integer, Movie> movieHash = fileReader.readMovie();
+        //HashTable<Integer, Movie> movieHash = fileReader.readMovie();
         HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(59,0.5f);
-        HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash,castMemberIndex);
+        //HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash,castMemberIndex);
         //Reportes.showReporte1(castMemberIndex);
 
 

@@ -2,7 +2,10 @@ package reportes.sort;
 
 import TADs.arraylist.MyArrayList;
 import TADs.arraylist.MyArrayListImpl;
-import entities.CauseOfDeath;
+import TADs.heap.*;
+import TADs.heap.SimpleHeap.SimpleHeap;
+import TADs.heap.SimpleHeap.SimpleHeapImpl;
+import TADs.heap.exceptions.*;
 
 import java.util.ArrayList;
 
@@ -94,17 +97,31 @@ public class Sort<K extends Comparable<K>, V> {
         }
     }
 
-    /*public static void HeapSort(Comparable[] lista) throws HeapOverflowException, EmptyHeapException {
+    public static void SimpleHeapSort(Comparable[] lista) throws HeapOverflowException, EmptyHeapException {
         if (lista != null && lista.length > 1) {
-            Heap<Comparable, Object> heap = new HeapImpl<>(lista.length, "min");
+            SimpleHeap heap = new SimpleHeapImpl(lista.length, "min");
             for (Comparable comparable : lista) {
-                heap.add(comparable,null);
+                heap.add(comparable);
             }
             for (int i=0; i< lista.length; i++){
                 lista[i]=heap.remove();
             }
         }
-    }*/
+    }
+
+    public void HeapSort(MyArrayList<SortNode<K,V>> lista){
+        if (lista != null && lista.size() > 1) {
+            SimpleHeap<SortNode<K,V>> heap = new SimpleHeapImpl<>(lista.size(), "min");
+            try {
+                for (int i = 0; i < lista.size(); i++) {
+                    heap.add(lista.get(i));
+                }
+                for (int i = 0; i < lista.size(); i++) {
+                    lista.setElement(i, heap.remove());
+                }
+            } catch (HeapOverflowException | EmptyHeapException ignore) {}
+        }
+    }
 
     public static void MergeSort(Comparable[] lista){
         if (lista != null && lista.length>1) {
