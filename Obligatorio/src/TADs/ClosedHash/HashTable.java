@@ -1,6 +1,8 @@
 package TADs.ClosedHash;
 import TADs.ClosedHash.exceptions.*;
 
+import TADs.LinkedList.interfaces.Lista;
+
 public interface HashTable<K,V> {
     void put(K key, V value) throws KeyAlreadyExistsException;
     boolean contains(K key);
@@ -11,6 +13,6 @@ public interface HashTable<K,V> {
     int tableSize();
     V iteratorNext();
     void iteratorReset();
-
+    Lista<V> values();
 }
 

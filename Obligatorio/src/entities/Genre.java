@@ -11,11 +11,10 @@ public class Genre {
     public boolean equals(Object o){
         if (o == this){
             return true;
-        } else if (!(o instanceof Genre)){
-            return false;
+        } else if (o instanceof Genre g){
+            return name.equals(g.getName());
         }
-        Genre c = (Genre) o;
-        return c.getName().equals(this.name);
+        return false;
     }
 
     public String getName() {

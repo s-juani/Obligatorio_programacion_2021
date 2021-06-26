@@ -7,6 +7,7 @@ public class CauseOfDeath {
         this.name = name;
     }
 
+    /*
     public boolean equals(Object o){
         if (o == this){
             return true;
@@ -15,6 +16,11 @@ public class CauseOfDeath {
         }
         CauseOfDeath c = (CauseOfDeath) o;
         return c.getName().equals(this.name);
+    }
+    */
+
+    public boolean equals(String str){
+        return this.name.equalsIgnoreCase(str);
     }
 
     public String getName() {

@@ -73,14 +73,20 @@ public abstract class fileReader {
                     if (!row[14].equals("")) divorces = Integer.parseInt(row[14]);
                     Integer spousesWithChildren = null;
                     if (!row[15].equals("")) spousesWithChildren = Integer.parseInt(row[15]);
+
+
                     Integer children = null;
-                    if (!row[16].equals("")) children = Integer.parseInt(row[16]);
+                    try{
+                        children = Integer.parseInt(row[16]);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
 
                     //birth_location a lista
                     String[] birth = new String[2];
                     if (!row[7].equals("")){
-                        row[7] = row[7].substring(1,row[7].length()-1);
-                        String[] birthArray = row[7].split(",");
+                        String tempRow = row[7].substring(1,row[7].length()-1);
+                        String[] birthArray = tempRow.split(",");
                         if (birthArray.length>=2) {
                             birth[0]=birthArray[0]; //city
                             birth[1]=birthArray[1]; //state
@@ -90,8 +96,8 @@ public abstract class fileReader {
                     //death_location a lista
                     String[] death = new String[3];
                     if (!row[10].equals("")){
-                        row[10] = row[10].substring(1,row[10].length()-1);
-                        String[] deathArray = row[10].split(",");
+                        String tempRow = row[10].substring(1,row[10].length()-1);
+                        String[] deathArray = tempRow.split(",");
                         if (deathArray.length>3) {
                             death[0] = deathArray[0]; //city
                             death[1] = deathArray[1]; //state
@@ -102,7 +108,6 @@ public abstract class fileReader {
                             death[2]=deathArray[1]; //country
                         } else if (deathArray.length==1) death[2]=deathArray[0]; //country
                     }
-
 
                     //birthDate -> adapt to java.date
                     Date birthDate = null;  // row[6]
@@ -120,6 +125,7 @@ public abstract class fileReader {
                             }
                             try{
                                 birthDate = new SimpleDateFormat("yyyy").parse(year);
+                                birthYear = Integer.parseInt(year);
                             } catch (Exception f){
                                 f.printStackTrace();
                             }
@@ -134,6 +140,17 @@ public abstract class fileReader {
                         } catch (ParseException ignore){}
                     }
 
+                    //causeOfDeath
+                    String causeOfDeath = row[11];
+                    if (!row[11].isEmpty()){
+                        while (causeOfDeath.charAt(0) == ' ' || causeOfDeath.charAt(0) =='\"') {
+                            causeOfDeath = causeOfDeath.substring(1);
+                        }
+                        while (causeOfDeath.charAt(causeOfDeath.length()-1) == ' ' || causeOfDeath.charAt(causeOfDeath.length()-1) =='\"') {
+                            causeOfDeath = causeOfDeath.substring(0,causeOfDeath.length()-1);
+                        }
+                    }
+
 
                     CastMember memberToAdd = new CastMember(row[0], row[1], row[2], height, row[4],
                                                             birthDate,// row[6] buscar como castear a Date
@@ -141,11 +158,11 @@ public abstract class fileReader {
                                                             birth[0],       //row[7] array con birth city, state, country
                                                             birth[1],
                                                             row[7],
-                                                            deathDate,      //row[9] buscar como castear a Date
+                                                            deathDate,
                                                             death[0],       //row[10] array con death city, state, country
                                                             death[1],
-                                                            death[2],
-                                                            row[11],
+                                                            row[10],
+                                                            causeOfDeath,
                                                             row[12],
                                                             spouses,
                                                             divorces,
@@ -252,7 +269,20 @@ public abstract class fileReader {
 
                 // String[] casts: genre, country, director, writer, actors
                 String[] genre = null;
-                if (row[5] != null) genre = row[5].split(",");
+                if (!row[5].isEmpty()){
+                    genre = row[5].split(",");
+                    for (int i=0; i<genre.length; i++) {
+                        if (!genre[i].isEmpty()) {
+                            while (genre[i].charAt(0) == ' ' || genre[i].charAt(0) == '\"') {
+                                genre[i] = genre[i].substring(1);
+                            }
+                            while (genre[i].charAt(genre[i].length() - 1) == ' ' || genre[i].charAt(genre[i].length() - 1) == '\"') {
+                                genre[i] = genre[i].substring(0, genre[i].length() - 1);
+                            }
+                        }
+                    }
+                }
+
                 String[] country = row[7].split(",");
                 String[] director = row[9].split(",");
                 String[] writer = row[10].split(",");
@@ -655,9 +685,20 @@ public abstract class fileReader {
                     Integer castMemberHashCode = Integer.parseInt(row[2].substring(2));
                     CastMember castMember = memberHash.get(castMemberHashCode);
 
-                    castMember.setOcupation(row[3]);
+                    //category
+                    String category = row[3];
+                    if (!row[3].isEmpty()){
+                        while (category.charAt(0) == ' ' || category.charAt(0) =='\"') {
+                            category = category.substring(1);
+                        }
+                        while (category.charAt(category.length()-1) == ' ' || category.charAt(category.length()-1) =='\"') {
+                            category = category.substring(0,category.length()-1);
+                        }
+                    }
 
-                    MovieCastMember movieCastMemberToAdd = new MovieCastMember(movie, ordering, castMember, row[3], row[4], characters);
+                    castMember.setOcupation(category);
+
+                    MovieCastMember movieCastMemberToAdd = new MovieCastMember(movie, ordering, castMember, category, row[4], characters);
 
                     try {
                         MovieCastMember.getCastMemberIndex().get(castMember.hashCode()).add(movieCastMemberToAdd);

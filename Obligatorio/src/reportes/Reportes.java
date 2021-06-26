@@ -1,5 +1,6 @@
 package reportes;
 
+import TADs.ClosedHash.ClosedHashTable;
 import TADs.ClosedHash.HashTable;
 import TADs.ClosedHash.exceptions.KeyAlreadyExistsException;
 import TADs.ClosedHash.exceptions.KeyNotExistsException;
@@ -14,6 +15,8 @@ import TADs.heap.exceptions.HeapOverflowException;
 import entities.*;
 import reportes.sort.Sort;
 import reportes.sort.SortNode;
+
+import java.util.Arrays;
 
 
 public abstract class Reportes {
@@ -117,14 +120,13 @@ public abstract class Reportes {
                     //agregar causa de muerte al arrayList o incrementar su cantidad si ya estaba
                     boolean hasCauseOfDeath = false;
                     for (int j=0; j<list.size(); j++){
-                        //System.out.println(list.get(j).getValue().getName());
                         if (list.get(j).getValue().equals(castMember.getReasonOfDeath())){
                             list.get(j).setKey(list.get(j).getKey() + 1);
                             hasCauseOfDeath = true;
                             break;
                         }
                     }
-                    if (!hasCauseOfDeath && castMember.getReasonOfDeath()!=null){
+                    if (!hasCauseOfDeath && !castMember.getReasonOfDeath().getName().isEmpty()){
                         SortNode<Integer,CauseOfDeath> temp = new SortNode<>(1, castMember.getReasonOfDeath());
                         list.add(temp);
                     }
@@ -216,6 +218,7 @@ public abstract class Reportes {
         Object[][] resultado = new Object[2][2];
         //sortNode = key: year , value: [cantidad actores, cantidad actrices]
         MyArrayList<SortNode<Integer, Integer[]>> list = new MyArrayListImpl<>(200);
+
         castMemberHash.iteratorReset();
         CastMember castMember;
         while ((castMember = castMemberHash.iteratorNext()) != null){
@@ -223,13 +226,13 @@ public abstract class Reportes {
                 Integer year = castMember.getBirthYear();
                 boolean yearExists = false;
                 for (int j=0; j<list.size(); j++){
-                    //System.out.println(list.get(j).getValue().getName());
                     if (list.get(j).getKey().equals(year)){
                         if (castMember.getOcupation().find("actor")){
                             Integer[] cantidad = list.get(j).getValue();
                             cantidad[0]++;
                             list.get(j).setValue(cantidad);
-                        } else if (castMember.getOcupation().find("actress")){
+                        }
+                        if (castMember.getOcupation().find("actress")){
                             Integer[] cantidad = list.get(j).getValue();
                             cantidad[1]++;
                             list.get(j).setValue(cantidad);
@@ -242,7 +245,8 @@ public abstract class Reportes {
                     Integer[] cantidad = new Integer[]{0, 0};;
                     if (castMember.getOcupation().find("actor")){
                         cantidad[0] = 1;
-                    } else if (castMember.getOcupation().find("actress")){
+                    }
+                    if (castMember.getOcupation().find("actress")){
                         cantidad[1] = 1;
                     }
                     SortNode<Integer, Integer[]> temp = new SortNode<>(year,cantidad);
@@ -261,11 +265,10 @@ public abstract class Reportes {
             if (tempYear.getValue()[1].compareTo(yearActress.getValue()[1])>0){
                 yearActress = tempYear;
             }
-
-            resultado[0] = new Object[]{yearActor.getKey(), yearActor.getValue()[0]};
-            resultado[1] = new Object[]{yearActress.getKey(), yearActress.getValue()[1]};
-
         }
+
+        resultado[0] = new Object[]{yearActor.getKey(), yearActor.getValue()[0]};
+        resultado[1] = new Object[]{yearActress.getKey(), yearActress.getValue()[1]};
 
         return resultado;
     }
@@ -279,6 +282,8 @@ public abstract class Reportes {
         String[][] resultado = new String[10][2];
         MyArrayList<SortNode<Integer, Genre>> list = new MyArrayListImpl<>(200);
 
+        HashTable<String, CastMember> wentThrough = new ClosedHashTable<>(500000,0.6f);
+
         Lista<MovieCastMember> movieCastMemberList;
         Movie movie;
         CastMember actor;
@@ -291,7 +296,10 @@ public abstract class Reportes {
                 actor = movieCastMemberList.get(p).getCastMember();
                 if (actor.getOcupation().find("actor") || actor.getOcupation().find("actress")){
                     if (actor.getChildren()>=2) {
-                        hasActors = true;
+                        try {
+                            wentThrough.put(actor.getImdbNameId(), actor);
+                            hasActors = true;
+                        } catch (Exception e){}
                         break;
                     }
                 }
@@ -300,7 +308,7 @@ public abstract class Reportes {
                 for (Genre genre : movie.getGenre()){
                     SortNode<Integer, Genre> newNode = new SortNode<>(1,genre);
                     boolean exists = false;
-                    for (int j=0; j<list.size(); j++){
+                    for (int j = 0; j< list.size(); j++){
                         if (list.get(j).equals(newNode)){
                             list.get(j).setKey(list.get(j).getKey()+1);
                             exists = true;
@@ -317,6 +325,8 @@ public abstract class Reportes {
         Sort<Integer, Genre> sort = new Sort<>();
         //sort.quickSort(list, 0, list.size()-1);
         sort.HeapSort(list);
+
+
         int j=0;
         for (int i=list.size()-1; i>list.size()-11; i--){
             SortNode<Integer, Genre> temp = list.get(i);

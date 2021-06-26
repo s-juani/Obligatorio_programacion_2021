@@ -113,7 +113,7 @@ public class Main{
             float promedio = (float) resultado[i][0];
             System.out.println("Id película: " + movie.getImdbTitleId());
             System.out.println("Nombre: " + movie.getTitle());
-            System.out.println("Altura promedio de actores:" + promedio + "\n");
+            System.out.println("Altura promedio de actores: " + promedio + "\n");
 
         }
 
@@ -174,6 +174,8 @@ public class Main{
         finishTime /= 1000000;
 
         System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: " + finishTime + "ms");
+
+
 
 
     }

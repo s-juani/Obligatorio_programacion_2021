@@ -69,7 +69,6 @@ public class Movie {
       this.metaScore = metaScore;
       this.reviewsFromUsers = reviewsFromUsers;
       this.reviewsFromCritics = reviewsFromCritics;
-      this.rating = null;
    }
 
    public static HashTable<Integer, Lista<Movie>> getYearIndex() {
@@ -92,17 +91,18 @@ public class Movie {
       for (String genre : genreList) {
          temp = new Genre(genre);
          try {
-            if (!genreHash.contains(temp.getName())) {
-               genreHash.put(temp.getName(), temp);
-            } else {
+            genreHash.put(temp.getName(), temp);
+         } catch (KeyAlreadyExistsException e) {
+            try {
                temp = genreHash.get(temp.getName());
+            } catch (KeyNotExistsException ignore) {
             }
-            genresArray.add(temp);
-         } catch (KeyAlreadyExistsException | KeyNotExistsException ignore) {}
+         }
+         genresArray.add(temp);
       }
 
       genres = new Genre[genresArray.size()];
-      for (int i = 0; i<genres.length; i++){
+      for (int i = 0; i<genresArray.size(); i++){
          genres[i] = genresArray.get(i);
       }
       return genres;

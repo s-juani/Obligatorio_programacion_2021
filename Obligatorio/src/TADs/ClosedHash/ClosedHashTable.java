@@ -1,5 +1,7 @@
 package TADs.ClosedHash;
 import TADs.ClosedHash.exceptions.*;
+import TADs.LinkedList.ListaEnlazada;
+import TADs.LinkedList.interfaces.Lista;
 
 public class ClosedHashTable<K,V> implements HashTable<K,V> {
 
@@ -156,6 +158,15 @@ public class ClosedHashTable<K,V> implements HashTable<K,V> {
         return (position + attempt) % table.length;
     }
 
-
+    @Override
+    public Lista<V> values(){
+        Lista<V> toReturn = new ListaEnlazada<>();
+        for (int i=0; i<this.size();i++){
+            if (table[i] != null){
+                toReturn.add(table[i].getValue());
+            }
+        }
+        return toReturn;
+    }
 }
 

@@ -106,19 +106,6 @@ public class CastMember {
     public String getDeathCity() {
         return deathCity;
     }
-    /*
-    public CauseOfDeath getReasonOfDeath(int position) {
-        if (position >= reasonOfDeath.length){
-            return null;
-        } else {
-            return reasonOfDeath[position];
-        }
-    }
-
-    public Integer getReasonOfDeathLenght(){
-        return reasonOfDeath.length;
-    }
-    */
     public String getSpousesString() {
         return spousesString;
     }
@@ -195,7 +182,6 @@ public class CastMember {
                     }*/
 
     }
-
 
     /**
       row[0] = imdb_name_id            String

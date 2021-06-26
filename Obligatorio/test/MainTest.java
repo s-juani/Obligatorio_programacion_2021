@@ -8,9 +8,7 @@ import TADs.arraylist.MyArrayList;
 import TADs.arraylist.MyArrayListImpl;
 import TADs.heap.exceptions.EmptyHeapException;
 import TADs.heap.exceptions.HeapOverflowException;
-import entities.CastMember;
-import entities.Movie;
-import entities.MovieCastMember;
+import entities.*;
 import filereader.fileReader;
 import org.junit.jupiter.api.Test;
 import reportes.Reportes;
@@ -77,9 +75,8 @@ class MainTest {
         HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash);
         fileReader.readMovieRating(movieHash);
 
-        String[][] top5 = Reportes.reporte2(castMemberHash);
-
         long startTime = System.nanoTime();
+        String[][] top5 = Reportes.reporte2(castMemberHash);
 
         for (int i=0; i<5; i++){
             System.out.println("Causa de muerte: " + top5[i][1]);
@@ -107,7 +104,7 @@ class MainTest {
             float promedio = (float) resultado[i][0];
             System.out.println("Id película: " + movie.getImdbTitleId());
             System.out.println("Nombre: " + movie.getTitle());
-            System.out.println("Altura promedio de actores:" + promedio + "\n");
+            System.out.println("Altura promedio de actores: " + promedio + "\n");
 
         }
 
@@ -159,7 +156,39 @@ class MainTest {
         finishTime -= startTime;
         finishTime /= 1000000;
 
+        /*
+        Movie.getGenreHash().iteratorReset();
+        Genre genre;
+        while ((genre = Movie.getGenreHash().iteratorNext())!=null){
+            System.out.println(genre.getName());
+        }
+
+         */
+
         System.out.println("Tiempo de ejecución de la consulta: " + finishTime + "ms\n");
+    }
+
+    @Test
+    public void testDataIntegrity(){
+        HashTable<Integer, CastMember> castMemberHash = fileReader.readCastMember(); //carga causeOfDeathHash y castMemberHash
+        HashTable<Integer, Movie> movieHash = fileReader.readMovie();
+        HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash);
+        fileReader.readMovieRating(movieHash);
+
+        long startTime = System.nanoTime();
+        String[][] top5 = Reportes.reporte2(castMemberHash);
+
+        Lista<CauseOfDeath> causas = CastMember.getCauseOfDeathHash().values();
+        for (int i=0; i<causas.size();i++){
+            System.out.println(causas.get(i).getName());
+        }
+
+
+        long finishTime = System.nanoTime();
+        finishTime -= startTime;
+        finishTime /= 1000000;
+
+        System.out.println("Tiempo de ejecución de la consulta: " + finishTime + "ms\n"); // tiempo de ejecucion
     }
 
 }
