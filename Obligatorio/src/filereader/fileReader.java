@@ -176,20 +176,39 @@ public abstract class fileReader {
                      *                             row[2],
                      *                             height,
                      *                             row[4],
-                     *                             null, // row[6] buscar como castear a Date
+                     *                             row[6] birthDate
+                     *                             birthYear: primeros 4 caracteres de row[6]
                      *                             birth[0], //row[7] array con birth state, country, city
                      *                             birth[1],
                      *                             birth[2],
-                     *                             null, // row[9] buscar como castear a Date
+                     *                             row[9] deathDate
                      *                             death[0], //row[10] array con death state, country, city
                      *                             death[1],
                      *                             death[2],
-                     *                             causesOfDeath, //row[11] new CauseOfDeath (name String)
+                     *                             reasonOfDeath, //row[11] new CauseOfDeath (name String)
                      *                             row[12],
                      *                             spouses,
                      *                             divorces,
                      *                             spousesWithChildren,
-                     *                             children);
+                     *                             children
+                     *
+                     *                             row[0] imdb_name_id String
+                     *                             row[1] name String
+                     *                             row[2] birth_name String
+                     *                             row[3] height Integer
+                     *                             row[4] bio String
+                     *                             row[5] birth_details *ignored*
+                     *                             row[6] date_of_birth Date
+                     *                             row[7] place_of_birth String
+                     *                             row[8] death_details *ignored*
+                     *                             row[9] date_of_death Date
+                     *                             row[10] place_of_death String
+                     *                             row[11] reason_of_death CauseOfDeath
+                     *                             row[12] spouses_string String
+                     *                             row[13] spouses Integer
+                     *                             row[14] divorces Integer
+                     *                             row[15] spouses_with_children Integer
+                     *                             row[16] children Integer
                      */
 
                     //for (int i = 0; i < row.length; i++){

@@ -17,7 +17,7 @@ public class Movie {
 
    private static HashTable<Integer, Lista<Movie>> yearIndex = new ClosedHashTable<>(203,0.5f);
 
-   private static HashTable<String, Genre> genreHash = new ClosedHashTable<>(30,0.7f);
+   private static HashTable<String, Genre> genreHash = new ClosedHashTable<>(31,0.7f);
    public static HashTable<String, Genre> getGenreHash() {
       return genreHash;
    }
