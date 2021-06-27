@@ -16,40 +16,40 @@ import entities.*;
 import reportes.sort.Sort;
 import reportes.sort.SortNode;
 
-import java.util.Arrays;
-
 
 public abstract class Reportes {
 
     // top 5 de actores/actrices segun cantidad de apariciones en peliculas
-    public static Object[][] reporte1(HashTable<Integer,Lista<MovieCastMember>> castMemberIndex) throws KeyNotExistsException, KeyAlreadyExistsException, HeapOverflowException, EmptyHeapException, EmptyQueueException {
+    public static Object[][] reporte1(HashTable<Integer,Lista<MovieCastMember>> castMemberIndex) throws HeapOverflowException, EmptyHeapException, EmptyQueueException {
         Object[][] top5 = new Object[5][2];
-        Heap<Integer, CastMember> topHeap = new HeapImpl<>(5,"min");
+        Heap<Integer, CastMember> topHeap = new HeapImpl<>(5,"min"); //heap minimo, de tamanio 5 para obtener el top 5
 
         Lista<MovieCastMember> movieList;
         CastMember castMember;
         MovieCastMember movieCastMember;
         castMemberIndex.iteratorReset();
         int apariciones;
+        // se itera por castMember y la lista de MovieCastMember asociados (peliculas en las que participo)
+        // en el indice por castMember de las instancias de MovieCastMember
         while ((movieList = castMemberIndex.iteratorNext()) != null) {
             apariciones = 0;
             movieList.iteratorReset();
             movieCastMember = movieList.iteratorNext();
             castMember = movieCastMember.getCastMember();
-            while ((movieCastMember) != null) {
+            while ((movieCastMember) != null) { //se verifica si la participacion es como actor o actress y se van contando
                 if (movieCastMember.getCategory().equals("actor") || movieCastMember.getCategory().equals("actress")) {
                     apariciones++;
                 }
                 movieCastMember = movieList.iteratorNext();
             }
             if (apariciones != 0) {
-                if (topHeap.size() == 5) {
+                if (topHeap.size() == 5) {  // se sustituye en el tope del heap si las apariciones son mayores que el minimo
                     if (((Integer) topHeap.top()[0]) < apariciones) {
                         topHeap.delete();
                         topHeap.add(apariciones, castMember);
                     }
                 } else {
-                    topHeap.add(apariciones, castMember);
+                    topHeap.add(apariciones, castMember); //se llena el heap con los primeros 5
                 }
             }
         }
@@ -111,9 +111,10 @@ public abstract class Reportes {
         String country;
 
         MyArrayList<SortNode<Integer,CauseOfDeath>> list = new MyArrayListImpl<>(1000);
-
+        //se itera en el hash de castMember
         while ((castMember = castMemberHash.iteratorNext())!=null){
             country = castMember.getBirthCountry();
+            //se filtra por pais de nacimiento y ocupation
             if (country.contains("USA") || country.contains("UK") || country.contains("France") || country.contains("Italy")) {
                 if (castMember.getOcupation().find("producer") || castMember.getOcupation().find("director")){
 
@@ -160,12 +161,12 @@ public abstract class Reportes {
     public static Object[][] reporte3(HashTable<Integer, Lista<Movie>> yearMovieIndex,
                                     HashTable<Integer, Lista<MovieCastMember>> movieCastMemberIndex){
         Object[][] resultado = new Object[14][2];
-        Heap<Float, Movie> topHeap = new HeapImpl<>(14,"min");
+        Heap<Float, Movie> topHeap = new HeapImpl<>(14,"min"); //heap para almacenar las 14 peliculas con mas wheightedAverage
 
         // extraer las 14 peliculas de 1950-1960 con mas weightedAverage
         for (int year = 1950; year<=1960; year++){
-            try{
-                Lista<Movie> movieList = yearMovieIndex.get(year);
+            try {
+                Lista<Movie> movieList = yearMovieIndex.get(year); //peliculas del año 'year'
                 movieList.iteratorReset();
                 Movie tempMovie;
                 while ((tempMovie = movieList.iteratorNext()) != null){
@@ -180,11 +181,11 @@ public abstract class Reportes {
             } catch (KeyNotExistsException | HeapOverflowException | EmptyHeapException ignore) {}
         }
 
-        // en cada pelicula obtener los actores y calcular su promedio de altura
+        // en cada pelicula obtener los actores y calcular su promedio de altura si no es null
         int i = 0;
         while (topHeap.size()!=0){
             try {
-                Movie movie = (Movie) topHeap.remove()[1];
+                Movie movie = (Movie) topHeap.remove()[1]; //se van obteniendo las peliculas
                 float promedio = 0.0f;
                 Integer altura;
                 int cantidad = 0;
@@ -192,12 +193,13 @@ public abstract class Reportes {
                 Lista<MovieCastMember> actorsList = movieCastMemberIndex.get(movie.hashCode());
                 actorsList.iteratorReset();
                 MovieCastMember movieCastMember;
-                while ((movieCastMember = actorsList.iteratorNext()) != null){
+                while ((movieCastMember = actorsList.iteratorNext()) != null){ //se itera entre los participantes de la pelicula
+                    //se filtra por category actor o actress, y por altura no nula
                     if (movieCastMember.getCategory().equals("actor") || movieCastMember.getCategory().equals("actress")){
                         altura = movieCastMember.getCastMember().getHeight();
                         if (altura != null){
-                            promedio += (float) altura;
-                            cantidad++;
+                            promedio += (float) altura;   //suma de las alturas no nulas
+                            cantidad++;                    //cantidad de alturas no nulas
                         }
                     }
                 }
@@ -213,12 +215,13 @@ public abstract class Reportes {
     }
 
 
-    // anio mas frecuente de nacimiento de actores y actrices
+    // año mas frecuente de nacimiento de actores y actrices
     public static Object[][] reporte4(HashTable<Integer, CastMember> castMemberHash){
         Object[][] resultado = new Object[2][2];
         //sortNode = key: year , value: [cantidad actores, cantidad actrices]
         MyArrayList<SortNode<Integer, Integer[]>> list = new MyArrayListImpl<>(200);
 
+        //se itera en el hash de CastMember
         castMemberHash.iteratorReset();
         CastMember castMember;
         while ((castMember = castMemberHash.iteratorNext()) != null){
@@ -229,12 +232,12 @@ public abstract class Reportes {
                     if (list.get(j).getKey().equals(year)){
                         if (castMember.getOcupation().find("actor")){
                             Integer[] cantidad = list.get(j).getValue();
-                            cantidad[0]++;
+                            cantidad[0]++; //se incrementa la cantidad de nacimientos de actores
                             list.get(j).setValue(cantidad);
                         }
                         if (castMember.getOcupation().find("actress")){
                             Integer[] cantidad = list.get(j).getValue();
-                            cantidad[1]++;
+                            cantidad[1]++; //se incrementa la cantidad de nacimientos de actrices
                             list.get(j).setValue(cantidad);
                         }
                         yearExists = true;
@@ -242,7 +245,7 @@ public abstract class Reportes {
                     }
                 }
                 if (!yearExists){
-                    Integer[] cantidad = new Integer[]{0, 0};;
+                    Integer[] cantidad = new Integer[]{0, 0};
                     if (castMember.getOcupation().find("actor")){
                         cantidad[0] = 1;
                     }
@@ -282,29 +285,28 @@ public abstract class Reportes {
         String[][] resultado = new String[10][2];
         MyArrayList<SortNode<Integer, Genre>> list = new MyArrayListImpl<>(200);
 
-        HashTable<String, CastMember> wentThrough = new ClosedHashTable<>(500000,0.6f);
-
         Lista<MovieCastMember> movieCastMemberList;
         Movie movie;
         CastMember actor;
         movieIndex.iteratorReset();
         boolean hasActors;
+
+
         while ((movieCastMemberList = movieIndex.iteratorNext()) != null){
             hasActors = false;
             movie = movieCastMemberList.get(0).getMovie();
+
             for (int p = 0; p<movieCastMemberList.size(); p++){
                 actor = movieCastMemberList.get(p).getCastMember();
                 if (actor.getOcupation().find("actor") || actor.getOcupation().find("actress")){
                     if (actor.getChildren()>=2) {
-                        try {
-                            wentThrough.put(actor.getImdbNameId(), actor);
-                            hasActors = true;
-                        } catch (Exception e){}
+                        hasActors = true;
                         break;
                     }
                 }
             }
             if (hasActors){
+                HashTable<String,Genre> genreWentThrough = new ClosedHashTable<String,Genre>(20,0.7f);
                 for (Genre genre : movie.getGenre()){
                     SortNode<Integer, Genre> newNode = new SortNode<>(1,genre);
                     boolean exists = false;
@@ -323,9 +325,7 @@ public abstract class Reportes {
         }
 
         Sort<Integer, Genre> sort = new Sort<>();
-        //sort.quickSort(list, 0, list.size()-1);
         sort.HeapSort(list);
-
 
         int j=0;
         for (int i=list.size()-1; i>list.size()-11; i--){
@@ -337,6 +337,4 @@ public abstract class Reportes {
 
         return resultado;
     }
-
-
 }

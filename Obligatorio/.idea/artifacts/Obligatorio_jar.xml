@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Obligatorio:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Obligatorio_jar</output-path>
+    <root id="archive" name="Obligatorio.jar">
+      <element id="module-output" name="Obligatorio" />
+    </root>
+  </artifact>
+</component>

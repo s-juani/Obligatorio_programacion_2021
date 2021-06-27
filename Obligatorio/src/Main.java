@@ -28,6 +28,7 @@ public class Main{
     }
 
     public static void menuPrincipal() throws HeapOverflowException, EmptyHeapException, KeyNotExistsException, KeyAlreadyExistsException, EmptyQueueException {
+        boolean cargaDeDatos = false;
         while (true){
 
             //init userInput scanner
@@ -41,9 +42,16 @@ public class Main{
             //int opcion = Integer.parseInt(input); //controlar que no sea null, entero o no este en el rango 1,2,3
             switch (opcion) {
                 case 1 -> {
-                    cargaDatos();
+                    if (cargaDeDatos) System.out.println("La carga de datos ya fue ejecutada.");
+                    else{
+                        cargaDatos();
+                        cargaDeDatos = true;
+                    }
                 }
-                case 2 -> menuReportes();
+                case 2 -> {
+                    if (cargaDeDatos) menuReportes();
+                    else System.out.println("Aun no se ejecuto la carga de datos.");
+                }
                 case 3 -> salir();
                 default -> menuPrincipal();
             }
@@ -174,8 +182,6 @@ public class Main{
         finishTime /= 1000000;
 
         System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: " + finishTime + "ms");
-
-
 
 
     }

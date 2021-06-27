@@ -57,9 +57,6 @@ public class fileReaderTest {
         HashTable<Integer, Lista<MovieCastMember>> castMemberIndex = new ClosedHashTable<>(59,0.5f);
         //HashTable<Long, MovieCastMember> movieCastMemberHash = fileReader.readTitlePrincipals(movieHash,castMemberHash,castMemberIndex);
         //Reportes.showReporte1(castMemberIndex);
-
-
-
     }
 
 

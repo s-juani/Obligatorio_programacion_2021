@@ -34,7 +34,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[17];
         int column;
-        final String castPath = "dataset\\IMDb names2.csv";
+        final String castPath = "dataset\\IMDb names.csv";
 
         HashTable<Integer,CastMember> hashToReturn = new ClosedHashTable<>(595411,0.5f);
 
@@ -242,7 +242,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[22];
         int column;
-        final String castPath = "dataset\\IMDb movies2.csv";
+        final String castPath = "dataset\\IMDb movies.csv";
 
         HashTable<Integer,Movie> hashToReturn = new ClosedHashTable<>(171711, 0.5f); //ajustar tamanio
 
@@ -417,7 +417,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[49];
         int column;
-        final String castPath = "dataset\\IMDb ratings2.csv";  /**"dataset\\IMDb ratings.csv" **/
+        final String castPath = "dataset\\IMDb ratings.csv";  /**"dataset\\IMDb ratings.csv" **/
 
         try{
             reader = new BufferedReader(new FileReader(castPath));
@@ -654,7 +654,7 @@ public abstract class fileReader {
         String line;
         String[] row = new String[6];
         int column;
-        final String titlePrincipalsPath = "dataset\\IMDb title_principals2.csv";
+        final String titlePrincipalsPath = "dataset\\IMDb title_principals.csv";
 
         HashTable<Long, MovieCastMember> hashToReturn = new ClosedHashTable<>(1670954,0.5f);
 
